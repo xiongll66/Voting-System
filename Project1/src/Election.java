@@ -35,7 +35,7 @@ class Election{
 
     }
 
-    publis List<Ballots> getBallots(){
+    public List<Ballots> getBallots(){
 
     }
 }
