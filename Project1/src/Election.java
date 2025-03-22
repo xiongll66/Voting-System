@@ -1,41 +1,18 @@
-
-
 import java.util.List;
 
-class Election{
-    private List<Ballots> ballots;
-    private String[] candidates;
-    private InitialInput input;
-    private VotingAlgorithm votingAlgorithm;
 
-    public Election(List<Ballots> ballots, String[] candidates,InitialInput input, VotingAlgorithm votingAlgorithm){
-        this.ballots = ballots;
+class Election {
+    public List<String> candidates;
+    public int numSeats;
+    public String algorithmType;
+    public List<Ballot> ballot;
+
+
+    public Election(List<String> candidates, int numSeats, String algorithmType, List<Ballot> ballots) {
         this.candidates = candidates;
-        this.input = input;
-        this.votingAlgorithm = votingAlgorithm;
+        this.numSeats = numSeats;
+        this.algorithmType = algorithmType;
+        this.ballot = ballots;
     }
 
-    public void promptForInput(){
-
-    }
-
-    public void processBallotFile(){
-
-    }
-
-    public void runElection(){
-
-    }
-
-    public InitialInput getInput(){
-
-    }
-
-    public String[] getCandidates(){
-
-    }
-
-    public List<Ballots> getBallots(){
-
-    }
 }
