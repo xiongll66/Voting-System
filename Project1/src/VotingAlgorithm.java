@@ -2,15 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract class VotingAlgorithm {
-    public List<String> winners;
-    public List<String> losers;
+    public List<String> winnerList;
+    public List<String> loserList;
+
 
     public VotingAlgorithm() {
-        this.winners = new ArrayList<>();
-        this.losers = new ArrayList<>();
+        this.winnerList = new ArrayList<>();
+        this.loserList = new ArrayList<>();
     }
 
-    public abstract void runSTVAlgorithm(List<Ballot> ballots);
-    public abstract void displaySTVResults();
-    public abstract void breakTieSTV();
+    public abstract void runAlgorithm(List<Ballot> ballots);
+    protected abstract void displayResults();
+    protected abstract List<Integer> breakTie(List<Integer> tieList);
+
 }

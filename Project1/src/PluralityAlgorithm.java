@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class PluralityAlgorithm extends VotingAlgorithm{
     private Election election; 
-    private List<String> winnerList;
-    private List<String> loserList;
+    public List<String> winnerList;
+    public List<String> loserList;
     int[] counterList;
     List<String> sortCanList;
     int[] sortVoteList; 
@@ -19,15 +19,6 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         this.sortVoteList = counterList.clone(); // clone to sort 
     }
 
-    public void runSTVAlgorithm(List<Ballot> ballots){ 
-        return;
-    }
-    public void displaySTVResults() {
-        return;
-    }
-    public void breakTieSTV() {
-        return;
-    }
     // filling in seats ?
     // Count the votes from ballots and give to candidate 
     // Make a checker to check if there's more then 1 1s
@@ -67,7 +58,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         }  
     }
     // Break tie if there is any 
-    private List<Integer> breakTie(List<Integer> tieList) {
+    protected List<Integer> breakTie(List<Integer> tieList) {
         Random random = new Random();
         List<Integer> orderedTieList = new ArrayList<>(); // To store in order from first winner to last loser
         // Randomly select candidates until all are ordered
@@ -81,6 +72,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     }
     // Count the vote to find winner or find a tie
     private void calculateWinner() {  // Can be improve with better sort algorithm(later)
+
         for (int i = 0; i < sortVoteList.length; i++) {
             for (int j = i + 1; j < sortVoteList.length; j++) {
                 // If current vote count is greater, swap values and names
@@ -100,10 +92,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         // Index in the sorted list where they are tied
         List<Integer> tieIndexList = new ArrayList<>(); 
 
-        // Store sorted list after random tie breaker(only partly)
-        List<Integer> tieSortedList = new ArrayList<>(); 
-
-        // the final combined index list of the tie sorted list 
+        // the final combined index list of the tie sorted list
         List<Integer> finalSortedWinners = new ArrayList<>(); 
 
         // Process the sorted list and handle ties
@@ -118,13 +107,14 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             }
             // If there's a tie and the next candidate doesn't tie, call the tie-breaker
             if (tieIndexList.size() > 1) {
-                tieSortedList = breakTie(tieIndexList);  
-                finalSortedWinners.addAll(tieSortedList);
+                finalSortedWinners.addAll(breakTie(tieIndexList));
             } else { // else if there no tie at all, directly add the candidate 
                 finalSortedWinners.add(tieIndexList.get(0));
             }
             
         }
+
+
         // Add everything to winner list based on seat avilable 
         int i;
         for (i = 0; i < election.numSeats; i++) {
@@ -135,15 +125,17 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         }
     }
     // Print result to screen
-    private void displayResult() {
+    @Override
+    protected void displayResults() {
+        System.out.println("Plurality Results:");
         System.out.println("Election Type: " + election.algorithmType);
-        System.out.println("Number of Ballots: " + election.ballots.size());
         System.out.println("Number of Seats: " + election.numSeats);
         System.out.println("Number of Candidates: " + election.candidates.size());
+        System.out.println("Number of Ballots: " + election.ballots.size());
         System.out.println();    
 
         int totalVotes = 0;
-        for (int votes : counterList) {
+        for (int votes : sortVoteList) {
             totalVotes += votes;
         }
 
@@ -152,17 +144,17 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         // Display winners with vote percentages
         System.out.println("\nWinners:");
         for (String winner : winnerList) {
-            int winnerIndex = election.candidates.indexOf(winner);
-            double percentage = (counterList[winnerIndex] / (double) totalVotes) * 100;
-            System.out.printf("%s - Votes: %d (%.2f%%)\n", winner, counterList[winnerIndex], percentage);
+            int winnerIndex = sortCanList.indexOf(winner);
+            double percentage = (sortVoteList[winnerIndex] / (double) totalVotes) * 100;
+            System.out.printf("%s - Votes: %d (%.2f%%)\n", winner, sortVoteList[winnerIndex], percentage);
         }
 
         // Display losers with vote percentages
         System.out.println("\nLosers:");
         for (String loser : loserList) {
-            int loserIndex = election.candidates.indexOf(loser);
-            double percentage = (counterList[loserIndex] / (double) totalVotes) * 100;
-            System.out.printf("%s - Votes: %d (%.2f%%)\n", loser, counterList[loserIndex], percentage);
+            int loserIndex = sortCanList.indexOf(loser);
+            double percentage = (sortVoteList[loserIndex] / (double) totalVotes) * 100;
+            System.out.printf("%s - Votes: %d (%.2f%%)\n", loser, sortVoteList[loserIndex], percentage);
         }
 
     }
@@ -173,7 +165,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     public void runAlgorithm(List<Ballot> ballots) {
         pluralityAlgorithmFunction(ballots); 
         calculateWinner(); 
-        displayResult();
+        displayResults();
     }
 }
    
