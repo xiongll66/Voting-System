@@ -5,6 +5,12 @@ public class STVInput extends InitialInput{
     public String auditFileName;
     public boolean shuffle;
     
+    public STVInput(String alg, int numSeats, String ballotFileName, String auditFileName, boolean shuffle) {
+        super(alg, numSeats, ballotFileName);
+        this.auditFileName = auditFileName;
+        this.shuffle = shuffle;
+    }
+
     /**
      * Gets name of audit file.
      * 

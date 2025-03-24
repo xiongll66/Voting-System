@@ -4,23 +4,30 @@
  */
 public abstract class InitialInput {
 
-    /**
-     * Represents 2 types of elections: Plurality and STV.
-     */
-    public enum Algorithm {
-        PLURALITY, STV
-    }
-
-    public Algorithm algorithm;
+    public String algorithm;
     public int numSeats;
     public String ballotFileName;
+
+    /**
+     * Constructor for InitialInput.
+     * 
+     * @param algorithm either plurality or STV
+     * @param numSeats the number of seats
+     * @param ballotFileName the name of the ballot file
+     */
+
+    public InitialInput(String algorithm, int numSeats, String ballotFileName) {
+        this.algorithm = algorithm;
+        this.numSeats = numSeats;
+        this.ballotFileName = ballotFileName;
+    }
 
     /**
      * Gets election algorithm selected.
      * 
      * @return Plurality or STV
      */
-    public Algorithm getAlgorithm() {
+    public String getAlgorithm() {
         return algorithm;
     }
 
@@ -40,32 +47,5 @@ public abstract class InitialInput {
      */
     public String getBallotFileName() {
         return ballotFileName;
-    }
-
-    /**
-     * Sets election algorithm.
-     * 
-     * @param algorithm the election algorithm to be set (Plurality of STV)
-     */
-    public void setAlgorithm(Algorithm algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    /**
-     * Sets the number of seats in election.
-     * 
-     * @param numSeats the number of seats to set
-     */
-    public void setNumSeats(int numSeats) {
-        this.numSeats = numSeats;
-    }
-
-    /**
-     * Sets the name of the ballot file.
-     * 
-     * @param ballotFileName the name of the ballot file to set
-     */
-    public void setBallotFileName(String ballotFileName) {
-        this.ballotFileName = ballotFileName;
     }
 }
