@@ -20,7 +20,7 @@ class STVAlgorithm extends VotingAlgorithm {
         this.nonElectedList = new HashMap<>();
     }
 
-     @Override
+    @Override
     public void runSTVAlgorithm(List<Ballot> ballots) {
         // Initialize counterList now that election is assigned
         this.counterList = (List<Ballot>[]) new List[election.candidates.size()];
