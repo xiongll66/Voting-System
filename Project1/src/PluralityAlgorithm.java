@@ -65,7 +65,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
  
     
     // Break tie
-    private void breakTie(List<Integer> tieList) {
+    private void breakTie(List<Integer> tieList, List<String> candidates) {
         Random random = new Random();
         // Randomly pick winner 
         int randomWinner = tieList.get(random.nextInt(tieList.size()));
@@ -80,32 +80,91 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     }
     // Count the vote to find winner or find a tie
     private void calculateWinner() {
-        int mostVote = 0; 
-        List<Integer> tieList = new ArrayList<>();
+        List<String> alreadySortedList = new ArrayList<>(); 
+        // for (int i = 0; i < counterList.length; i++) { 
+        //     for (int j = 0; j < counterList.length; i++) { 
+        //         if (counterList[j] > counterList[mostVote]) {
+        //             mostVote = j; 
+        //             tieList.clear();  // Clear previous ties
+        //             tieList.add(j); 
+        //         }
+        //         if (counterList[j] == counterList[mostVote]) {
+        //             tieList.add(j);
+        //         } else if (tieList.size() > 1) {
+        //             breakTie(tieList); 
+        //         }
+        //     }
+        //     alreadySortedList.add(election.candidates.get(mostVote));
 
-        // Find most voted candidate
-        for (int i = 0; i < counterList.length; i++) { 
-            if (counterList[i] > counterList[mostVote]) {
-                mostVote = i; 
-                tieList.clear();  // Clear previous ties
-                tieList.add(i); 
-            }
-            // Check for tie
-            if (counterList[i] == counterList[mostVote]) {
-                tieList.add(i);
-            }
-        }
-        // If there is a tie, move to tie phase 
-        if (tieList.size() > 1) {
-            breakTie(tieList); // Randomly select a winner
-            return;  
-        }
+        // }
+
+        // // Find most voted candidate
+        // for (int i = 0; i < counterList.length; i++) { 
+        //     if (counterList[i] > counterList[mostVote]) {
+        //         mostVote = i; 
+        //         tieList.clear();  // Clear previous ties
+        //         tieList.add(i); 
+        //     }
+        //     // Check for tie
+        //     if (counterList[i] == counterList[mostVote]) {
+        //         tieList.add(i);
+        //     }
+        // }
+        // // If there is a tie, move to tie phase 
+        // if (tieList.size() > 1) {
+        //     breakTie(tieList); // Randomly select a winner
+        //     return;  
+        // }
         
-        // Set a winner and losers 
-        winnerList.add(election.candidates.get(mostVote));
+        // // Set a winner and losers 
+        // winnerList.add(election.candidates.get(mostVote));
+        // for (int i = 0; i < counterList.length; i++) {
+        //     if (i != mostVote) {
+        //         loserList.add(election.candidates.get(i));
+        //     }
+        // }
+
         for (int i = 0; i < counterList.length; i++) {
-            if (i != mostVote) {
-                loserList.add(election.candidates.get(i));
+            for (int j = i + 1; j < counterList.length; j++) {
+                // If current vote count is greater, swap values and names
+                if (counterList[i] < counterList[j]) {
+                    // Swap vote counts
+                    int tempVotes = counterList[i];
+                    counterList[i] = counterList[j];
+                    counterList[j] = tempVotes; 
+                    
+                    // Swap corresponding candidate names
+                    String tempCandidate = election.candidates.get(i);
+                    election.candidates.set(i, election.candidates.get(j));
+                    election.candidates.set(j, tempCandidate);
+                }
+            }
+        }
+        List<Integer> tieList = new ArrayList<>();
+        List<String> tieCan = new ArrayList<>(); 
+        // Now process the sorted list and handle ties
+        for (int i = 0; i < counterList.length; i++) {
+            int currentVote = counterList[i];
+            tieList.clear();
+            tieList.add(i);  // Start with the current candidate
+            tieCan.clear();
+            tieCan.add(election.candidates.get(i));
+        
+            // Check if there's a tie
+            while (i + 1 < counterList.length && counterList[i + 1] == currentVote) {
+                tieList.add(i + 1); // Add the tied candidate
+                tieCan.add(election.candidates.get(i + 1));
+                i++;  // Skip over the next candidate since it's part of the tie
+            }
+        
+            // If there's a tie and the next candidate doesn't tie, call the tie-breaker
+            if (tieList.size() > 1) {
+                breakTie(tieList, tieCan);  
+            }
+        
+            // Add the candidates to the sorted list
+            for (int index : tieList) {
+                alreadySortedList.add(election.candidates.get(index));
             }
         }
     }
