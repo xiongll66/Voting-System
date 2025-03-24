@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PluralityAlgorithm extends VotingAlgorithm{
-    private Election election; 
+    protected Election election; 
     public List<String> winnerList;
     public List<String> loserList;
     int[] counterList;

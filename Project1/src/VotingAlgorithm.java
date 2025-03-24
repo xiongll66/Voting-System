@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract class VotingAlgorithm {
+    protected Election election; 
     public List<String> winnerList;
     public List<String> loserList;
+    public int numWinners; 
 
 
     public VotingAlgorithm() {
