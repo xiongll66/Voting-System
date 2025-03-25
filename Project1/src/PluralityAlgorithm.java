@@ -1,7 +1,20 @@
+/**
+ * PluralityAlgorithm.java
+ * 
+ * This class implements the Plurality voting algorithm.
+ * It counts votes from ballots, determines winners and losers, and handles ties.
+ *
+ * Author: Kongmeng Thao
+ */
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Implements the Plurality voting algorithm.
+ */
 public class PluralityAlgorithm extends VotingAlgorithm{
     protected Election election; 
     public List<String> winnerList;
@@ -10,38 +23,48 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     List<String> sortCanList;
     int[] sortVoteList; 
     
-
+    /**
+     * Constructor for PluralityAlgorithm.
+     * @param election The election object containing candidates and ballots.
+     */
     public PluralityAlgorithm(Election election) {
+        if (election == null || election.candidates == null || election.candidates.isEmpty()) {
+            throw new IllegalArgumentException("Election or candidate list cannot be null or empty.");
+        }
+        
         this.election = election; 
         this.winnerList = new ArrayList<>();
         this.loserList = new ArrayList<>();
-        this.sortCanList = new ArrayList<>(election.candidates); // clone to sort
-        this.sortVoteList = counterList.clone(); // clone to sort 
+        this.sortCanList = new ArrayList<>(election.candidates); // clone to be sort
+        this.counterList = new int[election.candidates.size()];
+        this.sortVoteList = counterList.clone(); // clone to be sort
+        
     }
 
-    // filling in seats ?
-    // Count the votes from ballots and give to candidate 
-    // Make a checker to check if there's more then 1 1s
+    /**
+     * Counts the votes from ballots and assigns them to candidates.
+     * @param ballots The list of ballots to process.
+     */
     private void pluralityAlgorithmFunction(List<Ballot> ballots) {
-        // Check if ballot have candidate
-        if (ballots.size() <= 0) {
-            System.out.println("Error: ballots have no cadidate");
-            return; 
+        // Check if there is ballots 
+        if (election.ballots.isEmpty() || election.ballots == null) {
+            throw new IllegalArgumentException("Ballot from Election cannot be null or empty.");
         }
-        // Find how many candidate and initialize counterList to keep count of votes
-        this.counterList = new int[ballots.get(0).getVote().length];       
+       
         for (int i = 0; i < ballots.size(); i++) {
             // Count candidate index
             int canIndexCounter = 0; 
             boolean foundVote = false; 
             int[] currBallotVote = ballots.get(i).getVote(); 
-
+            // check if ballot exist or is in a valid format
+            if (currBallotVote == null || currBallotVote.length != election.candidates.size()) {
+                throw new IllegalArgumentException("Ballot is null or is in invalid format.");
+            }
             // Loop through each ballot votes until vote found or exit 
             while (canIndexCounter < currBallotVote.length) {
                 // Check if ballot vote is either 1 or 0 
                 if (currBallotVote[canIndexCounter] != 0 && currBallotVote[canIndexCounter] != 1) {
-                    System.out.println("Error: invalid ballot vote (vote is not 0 or 1)");
-                    return; 
+                    throw new IllegalArgumentException("invalid ballot format (vote is not 0 or 1).");
                 }
                 // Found vote
                 if (currBallotVote[canIndexCounter] == 1) {
@@ -57,10 +80,16 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             foundVote = false; 
         }  
     }
-    // Break tie if there is any 
+    
+    /**
+    * Breaks ties by randomly ordering tied candidates.
+    * @param tieList The list of tied candidate indices.
+    * @return A list of candidate indices in a random order.
+    */
     protected List<Integer> breakTie(List<Integer> tieList) {
         Random random = new Random();
-        List<Integer> orderedTieList = new ArrayList<>(); // To store in order from first winner to last loser
+        // Store winners in order from first winner to last winner 
+        List<Integer> orderedTieList = new ArrayList<>(); 
         // Randomly select candidates until all are ordered
         while (!tieList.isEmpty()) {
             int randomIndex = random.nextInt(tieList.size()); // Pick a random index
@@ -70,8 +99,24 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         
         return orderedTieList;
     }
-    // Count the vote to find winner or find a tie
+
+    /**
+     * Calculates the winner(s) by sorting votes and handling ties.
+     */
     private void calculateWinner() {  // Can be improve with better sort algorithm(later)
+        // Check if there is vote from ballot to calculate 
+        if (sortVoteList == null || sortVoteList.length == 0) {
+            throw new IllegalArgumentException("No votes found.");
+        }
+        
+        // Check if number of candidates and numbers of votes match 
+        if (sortVoteList.length != sortCanList.size()) {
+            throw new IllegalArgumentException("Candidate and vote count mismatch.");
+        }
+    
+        if (election.numSeats > sortCanList.size()) {
+            throw new IllegalArgumentException("Number of seats exceeds the number of candidates.");
+        }
 
         for (int i = 0; i < sortVoteList.length; i++) {
             for (int j = i + 1; j < sortVoteList.length; j++) {
@@ -114,18 +159,19 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             
         }
 
-
-        // Add everything to winner list based on seat avilable 
+        // Add everything to winner list based on seat available 
         int i;
         for (i = 0; i < election.numSeats; i++) {
             winnerList.add(sortCanList.get(finalSortedWinners.get(i))); 
-        }
+        } // Add reminding to loser 
         for (; i < finalSortedWinners.size(); i++) {
             loserList.add(sortCanList.get(finalSortedWinners.get(i))); 
         }
     }
-    // Print result to screen
-    @Override
+
+    /**
+     * Displays the election results to the console.
+     */
     protected void displayResults() {
         System.out.println("Plurality Results:");
         System.out.println("Election Type: " + election.algorithmType);
@@ -158,11 +204,13 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         }
 
     }
-    
-   
-    
-   // What is called when it is Plurality election 
+     
+    /**
+     * Executes the Plurality voting algorithm.
+     * @param ballots The list of ballots to process.
+     */
     public void runAlgorithm(List<Ballot> ballots) {
+        
         pluralityAlgorithmFunction(ballots); 
         calculateWinner(); 
         displayResults();
