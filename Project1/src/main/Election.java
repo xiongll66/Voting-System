@@ -68,6 +68,7 @@ public class Election {
         } else {
             String auditFileName;
             boolean shuffle;
+            
             // prompt for auditFileName
             System.out.print("Enter a name for your audit file (without the extension): ");
             String auditFileNameInput = scanner.nextLine();
@@ -91,7 +92,6 @@ public class Election {
                 shuffle = true;
             }
 
-            // prompt for shuffle to be on or off
             input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
         }
 
