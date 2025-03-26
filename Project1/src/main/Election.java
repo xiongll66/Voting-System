@@ -111,10 +111,15 @@ public class Election {
             // iterate through all ballots
             while (ballotFileReader.hasNextLine()) {
                 Ballot newBallot;
+                String[] ballotLine = ballotFileReader.nextLine().split(",");
+                int[] vote = new int[ballotLine.length];
+                for (int i = 0; i < ballotLine.length; i++) {
+                    vote[i] = Integer.parseInt(ballotLine[i]);
+                }
                 if (input.getAlgorithm() == "plurality") {
-                    newBallot = new PluralityBallot(null);
+                    newBallot = new PluralityBallot(vote);
                 } else {
-                    newBallot = new STVBallot(id++, null);
+                    newBallot = new STVBallot(id++, vote);
                 }
                 ballots.add(newBallot);
             }
