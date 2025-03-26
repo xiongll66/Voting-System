@@ -5,7 +5,7 @@ import java.util.List;
  * Abstract class representing a voting algorithm.
  * This class defines the structure for any voting algorithm,
  * including handling election data, processing results and 
- * displaying it on terminal.
+ * displaying it on console.
  */
 abstract class VotingAlgorithm {
     /** The election associated with this voting algorithm. */
@@ -40,7 +40,7 @@ abstract class VotingAlgorithm {
 
     /**
      * Displays the results of the election.
-     * Implementations must define how results are print to terminal.
+     * Implementations must define how results are print to console.
      */
     protected abstract void displayResults();
 

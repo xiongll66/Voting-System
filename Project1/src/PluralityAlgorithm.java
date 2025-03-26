@@ -14,18 +14,35 @@ import java.util.Random;
 
 /**
  * Implements the Plurality voting algorithm.
+ * This voting system assigns votes based on the first-choice candidate
+ * in each ballot. The candidate with the most votes wins.
+ * If a tie occurs, a random tie-breaking mechanism is used.
  */
 public class PluralityAlgorithm extends VotingAlgorithm{
+    /** The election object containing candidates and ballots. */
     protected Election election; 
+
+     /** List of candidates who won the election. */
     public List<String> winnerList;
+
+    /** List of candidates who lost the election. */
     public List<String> loserList;
+
+    /** Stores the number of votes each candidate received. */
     int[] counterList;
+
+    /** Sorted list of candidate names based on votes. */
     List<String> sortCanList;
+
+    /** Sorted list of vote counts corresponding to `sortCanList`. */
     int[] sortVoteList; 
     
     /**
      * Constructor for PluralityAlgorithm.
+     * Initializes the necessary data structures for processing votes.
+     * 
      * @param election The election object containing candidates and ballots.
+     * @throws IllegalArgumentException if the election object or candidate list is null or empty.
      */
     public PluralityAlgorithm(Election election) {
         if (election == null || election.candidates == null || election.candidates.isEmpty()) {
@@ -43,7 +60,9 @@ public class PluralityAlgorithm extends VotingAlgorithm{
 
     /**
      * Counts the votes from ballots and assigns them to candidates.
+     * 
      * @param ballots The list of ballots to process.
+     * @throws IllegalArgumentException if ballots are null, empty, or improperly formatted.
      */
     private void pluralityAlgorithmFunction(List<Ballot> ballots) {
         // Check if there is ballots 
@@ -80,9 +99,10 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             foundVote = false; 
         }  
     }
-    
+
     /**
     * Breaks ties by randomly ordering tied candidates.
+
     * @param tieList The list of tied candidate indices.
     * @return A list of candidate indices in a random order.
     */
@@ -102,6 +122,8 @@ public class PluralityAlgorithm extends VotingAlgorithm{
 
     /**
      * Calculates the winner(s) by sorting votes and handling ties.
+     * 
+     * @throws IllegalArgumentException if vote counts are missing or mismatched with candidates.
      */
     private void calculateWinner() {  // Can be improve with better sort algorithm(later)
         // Check if there is vote from ballot to calculate 
@@ -207,6 +229,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      
     /**
      * Executes the Plurality voting algorithm.
+     * 
      * @param ballots The list of ballots to process.
      */
     public void runAlgorithm(List<Ballot> ballots) {
