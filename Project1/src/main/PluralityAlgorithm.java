@@ -6,8 +6,7 @@
  *
  * Author: Kongmeng Thao
  */
-
-
+package main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -64,7 +63,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      * @param ballots The list of ballots to process.
      * @throws IllegalArgumentException if ballots are null, empty, or improperly formatted.
      */
-    private void pluralityAlgorithmFunction(List<Ballot> ballots) {
+    private void pluralityAlgorithmFunction(List<PluralityBallot> ballots) {
         // Check if there is ballots 
         if (election.ballots.isEmpty() || election.ballots == null) {
             throw new IllegalArgumentException("Ballot from Election cannot be null or empty.");
@@ -232,7 +231,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      * 
      * @param ballots The list of ballots to process.
      */
-    public void runAlgorithm(List<Ballot> ballots) {
+    public void runAlgorithm(List<PluralityBallot> ballots) {
         
         pluralityAlgorithmFunction(ballots); 
         calculateWinner(); 

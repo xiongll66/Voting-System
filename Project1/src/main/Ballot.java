@@ -1,11 +1,10 @@
-class Ballot {
+package main;
+abstract public class Ballot {
     private int[] vote;
 
     public Ballot(int[] vote) {
         this.vote = vote;
     }
 
-    public int[] getVote() {
-        return vote;
-    }
+    abstract public int[] getVote();
 }

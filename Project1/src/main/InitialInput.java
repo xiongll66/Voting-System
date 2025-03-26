@@ -1,3 +1,4 @@
+package main;
 
 /**
  * Abstract class representing initial input for election.
