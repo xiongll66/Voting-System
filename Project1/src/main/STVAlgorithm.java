@@ -73,7 +73,7 @@ class STVAlgorithm extends VotingAlgorithm {
                 if (ranks[candidateId] == firstPref) {
                     if (!electedList.containsKey(candidateId)) {
                         counterList[candidateId].add(ballot); // assign the ballot to the candidate
-                        auditLog.add("Ballot number " + ballot.getId() + " is voted for candidate " + election.getCandidates().get(candidateId));
+                        auditLog.add("Ballot number " + ballot.getId() + " is voted for candidate " + election.getCandidates()[candidateId]);
                     }
                     break; // stop once we assign the ballot
                 }
@@ -118,12 +118,12 @@ class STVAlgorithm extends VotingAlgorithm {
             // Convert winner and loser indices to candidate names
             List<String> winnerNames = new ArrayList<>();
             for (Integer winnerId : electedList.keySet()) {
-                winnerNames.add(election.candidates.get(winnerId)); // Get candidate name from the index
+                winnerNames.add(election.getCandidates()[winnerId]); // Get candidate name from the index
             }
 
             List<String> loserNames = new ArrayList<>();
             for (Integer loserId : nonElectedList.keySet()) {
-                loserNames.add(election.candidates.get(loserId)); // Get candidate name from the index
+                loserNames.add(election.getCandidates()[loserId]); // Get candidate name from the index
             }
             writer.println("Winners: " + winnerNames);
             writer.println("Losers: " + loserNames);
@@ -148,19 +148,19 @@ class STVAlgorithm extends VotingAlgorithm {
         // Convert winner and loser indices to candidate names
         List<String> winnerNames = new ArrayList<>();
         for (Integer winnerId : electedList.keySet()) {
-            winnerNames.add(election.getCandidates().get(winnerId)); // Get candidate name from the index
+            winnerNames.add(election.getCandidates()[winnerId]); // Get candidate name from the index
         }
 
         List<String> loserNames = new ArrayList<>();
         for (Integer loserId : nonElectedList.keySet()) {
-            loserNames.add(election.getCandidates().get(loserId)); // Get candidate name from the index
+            loserNames.add(election.getCandidates()[loserId]); // Get candidate name from the index
         }
         System.out.println("Winners: " + winnerNames);
         System.out.println("Losers: " + loserNames);
     }
 
     @Override
-    public void breakTieSTV() {
+    public void breakTie() {
         System.out.println("working on it");
     }
 
@@ -211,9 +211,9 @@ class STVAlgorithm extends VotingAlgorithm {
 
         if (weakestCandidate != -1) {
             nonElectedList.put(weakestCandidate, counterList[weakestCandidate].size());
-            System.out.println("Candidate " + election.getCandidates().get(weakestCandidate) +
+            System.out.println("Candidate " + election.getCandidates()[weakestCandidate] +
                     " eliminated with " + counterList[weakestCandidate].size() + " votes.");
-            auditLog.add("Candidate " + election.getCandidates().get(weakestCandidate) +
+            auditLog.add("Candidate " + election.getCandidates()[weakestCandidate] +
                     " eliminated with " + counterList[weakestCandidate].size() + " votes.");
             redistributeEliminatedBallots(weakestCandidate);
         }
@@ -234,9 +234,9 @@ class STVAlgorithm extends VotingAlgorithm {
     private void determineWinnersAndLosers() {
         for (int i = 0; i < election.getCandidates().length; i++) {
             if (electedList.containsKey(i)) {
-                winnerList.add(election.getCandidates().get(i));
+                winnerList.add(election.getCandidates()[i]);
             } else {
-                loserList.add(election.getCandidates().get(i));
+                loserList.add(election.getCandidates()[i]);
             }
         }
     }
