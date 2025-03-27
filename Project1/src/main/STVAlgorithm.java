@@ -22,30 +22,33 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     @Override
-    public void runSTVAlgorithm(List<Ballot> ballots) {
-        // Initialize counterList now that election is assigned
-        this.counterList = (List<Ballot>[]) new List[election.candidates.size()];
+    public void runAlgorithm(List<STVBallot> ballots) {
+        // Declare counterList as List<STVBallot>[]
+        this.counterList = new List[election.candidates.size()];
+
+        // Initialize each element of counterList with a new ArrayList of STVBallot
         for (int i = 0; i < counterList.length; i++) {
-            counterList[i] = new ArrayList<>();
+            counterList[i] = new ArrayList<>();  // Initializes each list in the array to hold STVBallot
         }
-        shuffleBallots(ballots);
+
+
+        shuffleBallots(ballots, false);
         calculateDroopQuota(ballots.size());
         redistributeCandidateBallots(ballots);
         generateAuditFile("audit_report.txt");
     }
 
-
-    // Shuffle the ballots
-    public void shuffleBallots(List<Ballot> ballots) {
-       
-        Collections.shuffle(ballots);
-        System.out.println("Ballots shuffled.");
-       
+    public void shuffleBallots(List<STVBallot> ballots, boolean shuffle) {
+        if (shuffle) {
+            Collections.shuffle(ballots);
+            System.out.println("Ballots shuffled.");
+        } else {
+            System.out.println("Shuffle is off for testing.");
+        }
     }
 
-    // Calculate the Droop Quota
     public void calculateDroopQuota(int numBallots) {
-        droopQuota = (numBallots / (election.numSeats + 1)) + 1;
+        droopQuota = (numBallots / (election.getInput().numSeats + 1)) + 1;
         System.out.println("Droop Quota: " + droopQuota); 
     }
 
