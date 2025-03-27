@@ -108,18 +108,29 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     // Generate an audit file
-    public void generateAuditFile(String fileName) {
+    private void generateAuditFile(String fileName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             writer.println("Election Type: STV");
-            writer.println("Number of Seats: " + election.numSeats);
-            writer.println("Number of Candidates: " + election.candidates.size());
-            writer.println("Winners: " + winners);
-            writer.println("Losers: " + losers);
+            writer.println("Number of Seats: " + election.getInput().numSeats);
+            writer.println("Number of Candidates: " + election.getCandidates().length);
             writer.println("Droop Quota: " + droopQuota);
+            
+            // Convert winner and loser indices to candidate names
+            List<String> winnerNames = new ArrayList<>();
+            for (Integer winnerId : electedList.keySet()) {
+                winnerNames.add(election.candidates.get(winnerId)); // Get candidate name from the index
+            }
 
-            writer.println("\nBallot Distribution:");
-            for (int i = 0; i < counterList.length; i++) {
-                writer.println("Candidate " + election.candidates.get(i) + ": " + counterList[i].size() + " ballots");
+            List<String> loserNames = new ArrayList<>();
+            for (Integer loserId : nonElectedList.keySet()) {
+                loserNames.add(election.candidates.get(loserId)); // Get candidate name from the index
+            }
+            writer.println("Winners: " + winnerNames);
+            writer.println("Losers: " + loserNames);
+
+            writer.println("\nAudit Log:");
+            for (String log : auditLog) {
+                writer.println(log);
             }
 
             System.out.println("Audit file generated: " + fileName);
@@ -129,13 +140,23 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     @Override
-    public void displaySTVResults() {
-        System.out.println("STV Results:");
+    public void displayResults() {
+        System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: STV");
-        System.out.println("Number of Seats: " + election.numSeats);
-        System.out.println("Number of Candidates: " + election.candidates.size());
-        System.out.println("Winners: " + winners);
-        System.out.println("Losers: " + losers);
+        System.out.println("Number of Seats: " + election.getInput().numSeats);
+        System.out.println("Number of Candidates: " + election.getCandidates().length);
+        // Convert winner and loser indices to candidate names
+        List<String> winnerNames = new ArrayList<>();
+        for (Integer winnerId : electedList.keySet()) {
+            winnerNames.add(election.getCandidates().get(winnerId)); // Get candidate name from the index
+        }
+
+        List<String> loserNames = new ArrayList<>();
+        for (Integer loserId : nonElectedList.keySet()) {
+            loserNames.add(election.getCandidates().get(loserId)); // Get candidate name from the index
+        }
+        System.out.println("Winners: " + winnerNames);
+        System.out.println("Losers: " + loserNames);
     }
 
     @Override
