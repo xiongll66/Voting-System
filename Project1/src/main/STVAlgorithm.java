@@ -11,6 +11,7 @@ class STVAlgorithm extends VotingAlgorithm {
     public HashMap<Integer, Integer> electedList; 
     public HashMap<Integer, Integer> nonElectedList; 
     public  int[] firstBallotTimes;
+    final List<String> auditLog = new ArrayList<>();
 
 
 
@@ -53,37 +54,56 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     // Distribute ballots into piles for candidates
-    public void redistributeCandidateBallots(List<Ballot> ballots) {
+    public void redistributeCandidateBallots(List<STVBallot> ballots) {
+        int firstPref; 
+        
         // Initialize piles for each candidate
-        for (int i = 0; i < counterList.length; i++) {
+        for (int i = 0; i < counterList.length; i++) { //counterList = [[], [], []] ,3 empty lists for the 3 candidates.
             counterList[i] = new ArrayList<>();
         }
 
-        // Distribute ballots to candidates based on first preference
-        for (Ballot ballot : ballots) {
-            int candidateIndex = getFirstPreference(ballot.choices);
-            if (candidateIndex != -1) {
-                counterList[candidateIndex].add(ballot);
+        auditLog.add("Ballots DISTRIBUTION");
+        for (int i = 0; i < ballots.size(); i++) {
+
+            STVBallot ballot = ballots.get(i);
+            int[] ranks = ballot.getVote();
+            firstPref = ballot.getPreference();
+
+            for (int candidateId = 0; candidateId < ranks.length; candidateId++) {
+                if (ranks[candidateId] == firstPref) {
+                    if (!electedList.containsKey(candidateId)) {
+                        counterList[candidateId].add(ballot); // assign the ballot to the candidate
+                        auditLog.add("Ballot number " + ballot.getId() + " is voted for candidate " + election.getCandidates().get(candidateId));
+                    }
+                    break; // stop once we assign the ballot
+                }
             }
         }
 
-        // Elect candidates who meet the quota and redistribute ballots
-        while (electedList.size() < election.numSeats) {
-            // Check if any candidate meets the quota
-            for (int i = 0; i < counterList.length; i++) {
-                if (counterList[i].size() >= droopQuota && !electedList.containsKey(i)) {
-                    electedList.put(i, counterList[i].size());
-                    System.out.println("Candidate " + election.candidates.get(i) + " elected with " + counterList[i].size() + " votes.");
+        while (electedList.size() < election.getInput().numSeats) {
+            boolean electedThisRound = false;
 
-                    // Redistribute surplus ballots
-                    redistributeSurplusBallots(i);
+            for (int candidate = 0; candidate < counterList.length; candidate++) {
+                if (!electedList.containsKey(candidate) && counterList[candidate].size() >= droopQuota) {
+                    electedList.put(candidate, counterList[candidate].size());
+                    System.out.println("Candidate " + election.getCandidates() +
+                            " elected with " + counterList[candidate].size() + " votes.");
+                    auditLog.add("Candidate " + election.getCandidates() +
+                            " has reached the quota and is elected.");
+                    redistributeSurplusBallots(candidate);
+                    electedThisRound = true;
                 }
             }
 
-            // Eliminate the candidate with the fewest votes
-            eliminateWeakestCandidate();
+            if (!electedThisRound) {
+                eliminateWeakestCandidate();
+            }
+
+            if (electedList.size() + nonElectedList.size() >= election.getCandidates().length) {
+                break;
+            }
         }
-        //Finalize winners and losers
+
         determineWinnersAndLosers();
     }
 
