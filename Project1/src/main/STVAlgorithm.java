@@ -167,85 +167,79 @@ class STVAlgorithm extends VotingAlgorithm {
 
     ///////Helper Functions/////////
  
-    // Helper method to get the first preference from a ballot
-    private int getFirstPreference(List<Integer> choices) {
-        for (int i = 0; i < choices.size(); i++) {
-            if (choices.get(i) != null) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     // Helper method to redistribute surplus ballots
     private void redistributeSurplusBallots(int candidateIndex) {
-        List<Ballot> surplusBallots = new ArrayList<>(counterList[candidateIndex].subList(droopQuota, counterList[candidateIndex].size()));
-        counterList[candidateIndex] = new ArrayList<>(counterList[candidateIndex].subList(0, droopQuota));
+        List<Ballot> allBallots = counterList[candidateIndex];
+        int surplusCount = allBallots.size() - droopQuota;
+
+        if (surplusCount <= 0) return;
+        List<Ballot> surplusBallots = new ArrayList<>(allBallots.subList(droopQuota, allBallots.size()));
+        counterList[candidateIndex] = new ArrayList<>(allBallots.subList(0, droopQuota));
 
         for (Ballot ballot : surplusBallots) {
-            int nextPreference = getNextPreference(ballot.choices, candidateIndex);
+            int nextPreference = getNextPreference(ballot.getVote(), candidateIndex);
             if (nextPreference != -1) {
                 counterList[nextPreference].add(ballot);
             }
         }
     }
 
-    // Helper method to get the next preference from a ballot
-    private int getNextPreference(List<Integer> choices, int currentPreference) {
-        for (int i = currentPreference + 1; i < choices.size(); i++) {
-            if (choices.get(i) != null) {
+    private int getNextPreference(int[] vote, int currentCandidate) {
+        int currentRank = vote[currentCandidate] + 1;
+
+        for (int i = 0; i < vote.length; i++) {
+            if (vote[i] == currentRank && !electedList.containsKey(i) && !nonElectedList.containsKey(i)) {
                 return i;
             }
         }
-        return -1;
+        return -1; // If no valid next preference is found
     }
 
-    // Helper method to eliminate the weakest candidate
     private void eliminateWeakestCandidate() {
         int weakestCandidate = -1;
         int minVotes = Integer.MAX_VALUE;
 
         for (int i = 0; i < counterList.length; i++) {
-            if (!electedList.containsKey(i) && counterList[i].size() < minVotes) {
-                weakestCandidate = i;
-                minVotes = counterList[i].size();
+            if (!electedList.containsKey(i) && !nonElectedList.containsKey(i)) {
+                int votes = counterList[i].size();
+                if (votes < minVotes) {
+                    weakestCandidate = i;
+                    minVotes = votes;
+                }
             }
         }
 
         if (weakestCandidate != -1) {
             nonElectedList.put(weakestCandidate, counterList[weakestCandidate].size());
-            System.out.println("Candidate " + election.candidates.get(weakestCandidate) + " eliminated with " + counterList[weakestCandidate].size() + " votes.");
-
-            // Redistribute ballots of the eliminated candidate
+            System.out.println("Candidate " + election.getCandidates().get(weakestCandidate) +
+                    " eliminated with " + counterList[weakestCandidate].size() + " votes.");
+            auditLog.add("Candidate " + election.getCandidates().get(weakestCandidate) +
+                    " eliminated with " + counterList[weakestCandidate].size() + " votes.");
             redistributeEliminatedBallots(weakestCandidate);
         }
     }
 
-    // Helper method to redistribute ballots of the eliminated candidate
     private void redistributeEliminatedBallots(int candidateIndex) {
         List<Ballot> eliminatedBallots = new ArrayList<>(counterList[candidateIndex]);
         counterList[candidateIndex].clear();
 
         for (Ballot ballot : eliminatedBallots) {
-            int nextPreference = getNextPreference(ballot.choices, candidateIndex);
+            int nextPreference = getNextPreference(ballot.getVote(), candidateIndex);
             if (nextPreference != -1) {
                 counterList[nextPreference].add(ballot);
             }
         }
     }
 
-
-    
-    // Helper method to determine winners and losers
     private void determineWinnersAndLosers() {
-        for (int i = 0; i < election.candidates.size(); i++) {
+        for (int i = 0; i < election.getCandidates().length; i++) {
             if (electedList.containsKey(i)) {
-                winners.add(election.candidates.get(i));
+                winnerList.add(election.getCandidates().get(i));
             } else {
-                losers.add(election.candidates.get(i));
+                loserList.add(election.getCandidates().get(i));
             }
         }
-
     }
-
 }
+
+
