@@ -23,19 +23,27 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     @Override
-    public void runAlgorithm(List<STVBallot> ballots) {
+    public void runAlgorithm(List<Ballot> ballots) {
         // Declare counterList as List<STVBallot>[]
-        this.counterList = new List[election.candidates.size()];
+        this.counterList = new List[election.getCandidates().length];
 
         // Initialize each element of counterList with a new ArrayList of STVBallot
         for (int i = 0; i < counterList.length; i++) {
             counterList[i] = new ArrayList<>();  // Initializes each list in the array to hold STVBallot
         }
 
+        // Convert Ballots to STVBallots with IDs
+        List<STVBallot> stvBallots = new ArrayList<>();
+        int ballotId = 1; // Starting ID
+        
+        for (Ballot ballot : ballots) {
+            // Create new STVBallot with unique ID and the original vote
+            STVBallot stvBallot = new STVBallot(ballotId++, ballot.getVote());
+            stvBallots.add(stvBallot);
+        }
 
-        shuffleBallots(ballots, false);
         calculateDroopQuota(ballots.size());
-        redistributeCandidateBallots(ballots);
+        redistributeCandidateBallots(stvBallots);
         generateAuditFile("audit_report.txt");
     }
 
@@ -55,6 +63,7 @@ class STVAlgorithm extends VotingAlgorithm {
 
     // Distribute ballots into piles for candidates
     public void redistributeCandidateBallots(List<STVBallot> ballots) {
+        shuffleBallots(ballots, false);
         int firstPref; 
         
         // Initialize piles for each candidate
@@ -160,8 +169,20 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     @Override
-    public void breakTie() {
-        System.out.println("working on it");
+    protected List<Integer> breakTie(List<Integer> tieList) {
+        if (tieList.size() == 1) {
+            return tieList; // No tie to break
+        }
+
+        return tieList;
+
+
+        //choosing a surplus to transfer when tie
+
+        //choosing a candidate to eliminate when tie
+
+        //choosing winners for the last seat when tie
+
     }
 
 
@@ -185,10 +206,10 @@ class STVAlgorithm extends VotingAlgorithm {
     }
 
     private int getNextPreference(int[] vote, int currentCandidate) {
-        int currentRank = vote[currentCandidate] + 1;
+        int nextRank = vote[currentCandidate] + 1; 
 
         for (int i = 0; i < vote.length; i++) {
-            if (vote[i] == currentRank && !electedList.containsKey(i) && !nonElectedList.containsKey(i)) {
+            if (vote[i] == nextRank && !electedList.containsKey(i) && !nonElectedList.containsKey(i)) {
                 return i;
             }
         }
