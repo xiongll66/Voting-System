@@ -8,6 +8,7 @@
  */
 package main;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
@@ -76,9 +77,16 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             boolean foundVote = false; 
             int[] currBallotVote = ballots.get(i).getVote(); 
             // check if ballot exist or is in a valid format
-            if (currBallotVote == null || currBallotVote.length != election.getCandidates().length) {
-                throw new IllegalArgumentException("Ballot is null or is in invalid format.");
+            System.out.println(currBallotVote);
+
+            if (currBallotVote == null) {
+                throw new IllegalArgumentException("Ballot is null");
             }
+
+            if (currBallotVote.length != election.getCandidates().length) {
+                throw new IllegalArgumentException("Ballot is in invalid format.");
+            }
+
             // Loop through each ballot votes until vote found or exit 
             while (canIndexCounter < currBallotVote.length) {
                 // Check if ballot vote is either 1 or 0 
@@ -94,7 +102,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             }
             // Give candidate in that index the vote 
             if (foundVote){
-                this.counterList[canIndexCounter]++;
+                this.sortVoteList[canIndexCounter]++;
             }
             foundVote = false; 
         }  
@@ -195,11 +203,9 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     protected void displayResults() {
         System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: " + election.getInput().getAlgorithm());
+        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Number of Ballots: " + election.getBallots().size());
-        System.out.println("Plurality Results:");
-        System.out.println("Election Type: " + election.getInput().getAlgorithm());
-        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
         System.out.println();    
 
         int totalVotes = 0;
@@ -210,7 +216,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         System.out.println("Election Results:");
         
         // Display winners with vote percentages
-        System.out.println("\nWinners:");
+        System.out.println("Winners:");
         for (String winner : winnerList) {
             int winnerIndex = sortCanList.indexOf(winner);
             double percentage = (sortVoteList[winnerIndex] / (double) totalVotes) * 100;
@@ -233,7 +239,10 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      * @param ballots The list of ballots to process.
      */
     public void runAlgorithm(List<Ballot> ballots) {
-        
+        for (Ballot ballot : ballots) {
+            System.out.println(ballot.getVote()); // Calls `toString()` method of `PluralityBallot`
+        }
+
         pluralityAlgorithmFunction(ballots);
         calculateWinner(); 
         displayResults();
