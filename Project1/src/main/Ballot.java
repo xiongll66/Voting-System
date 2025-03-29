@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Arrays;
+
 /**
  * Abstract class representing Ballot for election. 
  */
@@ -24,4 +26,12 @@ abstract public class Ballot {
     public int[] getVote() {
         return this.vote;
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ballot that = (Ballot) o;
+        return Arrays.equals(this.vote, that.getVote());
+    }
 }
