@@ -95,7 +95,7 @@ public class Election {
     }
 
     /**
-     * Gets input for the elction.
+     * Gets input for the election.
      * 
      * @return the initial input object that contains election setup information.
      */
@@ -128,6 +128,15 @@ public class Election {
      */
     public int getNumSeats() {
         return numSeats;
+    }
+
+    /**
+     * Gets VotingAlgorithm.
+     * 
+     * @return the VotingAlgorithm class that is picked.
+     */
+    public VotingAlgorithm getVotingAlgorithm() {
+        return votingAlgorithm;
     }
 
     /**

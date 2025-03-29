@@ -8,7 +8,6 @@
  */
 package main;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
@@ -77,7 +76,6 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             boolean foundVote = false; 
             int[] currBallotVote = ballots.get(i).getVote(); 
             // check if ballot exist or is in a valid format
-            System.out.println(currBallotVote);
 
             if (currBallotVote == null) {
                 throw new IllegalArgumentException("Ballot is null");
@@ -215,12 +213,25 @@ public class PluralityAlgorithm extends VotingAlgorithm{
 
         System.out.println("Election Results:");
         
+
+        List<SimpleEntry<String, Integer>> winners = new ArrayList<>();
+        for (String winner : winnerList) {
+            int winnerIndex = sortCanList.indexOf(winner);
+            winners.add(new SimpleEntry<>(winner, sortVoteList[winnerIndex]));
+        }
+
         // Display winners with vote percentages
         System.out.println("Winners:");
         for (String winner : winnerList) {
             int winnerIndex = sortCanList.indexOf(winner);
             double percentage = (sortVoteList[winnerIndex] / (double) totalVotes) * 100;
             System.out.printf("%s - Votes: %d (%.2f%%)\n", winner, sortVoteList[winnerIndex], percentage);
+        }
+
+        List<SimpleEntry<String, Integer>> losers = new ArrayList<>();
+        for (String loser : loserList) {
+            int loserIndex = sortCanList.indexOf(loser);
+            losers.add(new SimpleEntry<>(loser, sortVoteList[loserIndex]));
         }
 
         // Display losers with vote percentages
@@ -231,7 +242,36 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             System.out.printf("%s - Votes: %d (%.2f%%)\n", loser, sortVoteList[loserIndex], percentage);
         }
 
+
+
     }
+
+    /**
+     * Retrieves the list of winners from the election.
+     * 
+     * This method returns a list of candidates who have won the election based on
+     * the results of the Plurality algorithm. The list may contain one or more candidates
+     * depending on the election results (e.g., in the case of ties).
+     * 
+     * @return a list of candidate names who are the winners of the election.
+    */
+    public List<String> getWinnerList() {
+        return this.winnerList; 
+    }
+
+    /**
+     * Retrieves the list of losers from the election.
+     * 
+     * This method returns a list of candidates who have lost the election based on
+     * the results of the Plurality algorithm. The list may contain one or more candidates
+     * depending on the election results.
+     * 
+     * @return a list of candidate names who are the losers of the election.
+     */
+    public List<String> getLoserList() {
+        return this.loserList; 
+    }
+
     @Override
     /**
      * Executes the Plurality voting algorithm.
@@ -239,10 +279,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      * @param ballots The list of ballots to process.
      */
     public void runAlgorithm(List<Ballot> ballots) {
-        for (Ballot ballot : ballots) {
-            System.out.println(ballot.getVote()); // Calls `toString()` method of `PluralityBallot`
-        }
-
+        
         pluralityAlgorithmFunction(ballots);
         calculateWinner(); 
         displayResults();
