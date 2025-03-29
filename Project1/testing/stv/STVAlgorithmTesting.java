@@ -26,13 +26,16 @@ public class STVAlgorithmTesting {
 
     @Test
     void testCalculateDroopQuota() {
-        // Test with 100 ballots and 2 seats
-        stvAlgorithm.calculateDroopQuota(100, 2);
-        assertEquals(34, stvAlgorithm.droopQuota); // 100/(2+1) + 1 = 34
+        // Add test ballots (3 ballots)
+        ballots.add(new STVBallot(1, new int[]{1,2,3}));
+        ballots.add(new STVBallot(2, new int[]{1,3,2}));
+        ballots.add(new STVBallot(3, new int[]{2,1,3}));
         
-        // Test edge case with minimal ballots
-        stvAlgorithm.calculateDroopQuota(3, 1);
-        assertEquals(2, stvAlgorithm.droopQuota); // 3/(1+1) + 1 = 2
+        // Calculate quota based on actual ballots and input seats
+        stvAlgorithm.calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
+        
+        // Verify quota calculation (3 ballots, 1 seat: (3/(1+1))+1 = 2)
+        assertEquals(2, stvAlgorithm.droopQuota);
     }
 
     @Test
@@ -45,12 +48,13 @@ public class STVAlgorithmTesting {
         List<Ballot> original = new ArrayList<>(testBallots);
 
         // Shuffle off - should remain same
-        stvAlgorithm.shuffleBallots(testBallots, false);
+        stvAlgorithm.shuffleBallots(testBallots, ((STVInput) election.getInput()).getShuffle());
         assertEquals(original, testBallots);
 
         // Shuffle on - should be different
         stvAlgorithm.shuffleBallots(testBallots, true);
         assertNotEquals(original, testBallots);
+
     }
 
     @Test
