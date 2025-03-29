@@ -12,8 +12,7 @@ public class Election {
     private InitialInput input;
     private VotingAlgorithm votingAlgorithm;
 
-    public void promptForInput() {
-        Scanner scanner = new Scanner(System.in);
+    public void promptForInput(Scanner scanner) {
 
         char electionType;
         int numSeats = 0;
@@ -39,7 +38,7 @@ public class Election {
 
         String ballotFileNameInput = scanner.nextLine();
         File f = new File(ballotFileNameInput);
-        
+
         int lastDotIndex = ballotFileNameInput.lastIndexOf('.');
         String extension = ballotFileNameInput.substring(lastDotIndex + 1);
 
@@ -153,7 +152,8 @@ public class Election {
 
     public static void main(String[] args) {
         Election election = new Election();
-        election.promptForInput();
+        Scanner scanner = new Scanner(System.in);
+        election.promptForInput(scanner);
         election.processBallotFile();
         election.runElection();
     }
