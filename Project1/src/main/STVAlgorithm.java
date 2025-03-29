@@ -75,7 +75,7 @@ public class STVAlgorithm extends VotingAlgorithm {
 
         time = 0;
         firstBallotTimes = new int[election.getCandidates().length];
-        calculateDroopQuota(ballots.size());
+        calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         redistributeCandidateBallots(ballots);
         generateAuditFile("audit_report.txt");
     }
@@ -101,9 +101,10 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Formula: (total_ballots / (seats + 1)) + 1
      * 
      * @param numBallots The total number of ballots
+     * @param numSeats The number of seats
      */
-    public void calculateDroopQuota(int numBallots) {
-        droopQuota = (numBallots / (election.getInput().getNumSeats() + 1)) + 1;
+    public void calculateDroopQuota(int numBallots, int numSeats) {
+        droopQuota = (numBallots / (numSeats + 1)) + 1;
     }
 
     /**
