@@ -19,7 +19,7 @@ abstract public class Ballot {
     }
 
     /**
-     * method to get vote.
+     * Method to get vote.
      * 
      * @return an array of integers representing vote
      */
@@ -27,6 +27,12 @@ abstract public class Ballot {
         return this.vote;
     };
 
+    /**
+     * Method to compare ballots.
+     * 
+     * @param o the ballot object that's compared against
+     * @return true if ballot votes match, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

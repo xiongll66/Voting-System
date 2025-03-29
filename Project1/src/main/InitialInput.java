@@ -12,7 +12,7 @@ public abstract class InitialInput {
     /**
      * Constructor for InitialInput.
      * 
-     * @param algorithm either plurality or STV
+     * @param algorithm either plurality or stv
      * @param numSeats the number of seats
      * @param ballotFileName the name of the ballot file
      */
@@ -26,7 +26,7 @@ public abstract class InitialInput {
     /**
      * Gets election algorithm selected.
      * 
-     * @return Plurality or STV
+     * @return plurality or stv
      */
     public String getAlgorithm() {
         return algorithm;

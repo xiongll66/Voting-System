@@ -29,7 +29,7 @@ public class BallotFileReader {
      * Reads ballot from given ballot file. 
      * 
      * @param fileName The name of the ballot file to read ballots from
-     * @param algorithmType The algorithm type for the election (plurality or STV)
+     * @param algorithmType The algorithm type for the election (plurality or stv)
      * @return A list of Ballot objects
      * @throws FileNotFoundException If given file cannot be found
      */

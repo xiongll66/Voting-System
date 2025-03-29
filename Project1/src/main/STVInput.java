@@ -1,4 +1,5 @@
 package main;
+
 /**
  * Class for election input using STV algorithm. 
  */
