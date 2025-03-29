@@ -12,7 +12,7 @@ public class Election {
     private InitialInput input;
     private VotingAlgorithm votingAlgorithm;
 
-    private void promptForInput() {
+    public void promptForInput() {
         Scanner scanner = new Scanner(System.in);
 
         char electionType;
@@ -65,6 +65,7 @@ public class Election {
 
         if (electionType == 'p') {
             input = new PluralityInput("plurality", numSeats, ballotFileName);
+            votingAlgorithm = new PluralityAlgorithm(this);
         } else {
             String auditFileName;
             boolean shuffle;
@@ -93,12 +94,13 @@ public class Election {
             }
 
             input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
+            votingAlgorithm = new STVAlgorithm();
         }
 
         scanner.close();
     }
 
-    private void processBallotFile() {
+    public void processBallotFile() {
         String ballotFileName = input.getBallotFileName();
         File ballotFile = new File(ballotFileName);
         Scanner ballotFileReader;
@@ -131,7 +133,7 @@ public class Election {
         }
     }
 
-    private void runElection() {
+    public void runElection() {
         votingAlgorithm.runAlgorithm(ballots);
     }
 
