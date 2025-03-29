@@ -12,12 +12,12 @@ public class Election {
     private InitialInput input;
     private VotingAlgorithm votingAlgorithm;
 
+    private char electionType;
+    private String ballotFileName;
+    private String auditFileName;
+    private boolean shuffle;
+
     public void promptForInput(Scanner scanner) {
-
-        char electionType;
-        int numSeats = 0;
-        String ballotFileName;
-
         // prompt for election type
         System.out.println("Select election type:");
         System.out.println("Type 'p' for plurality voting");
@@ -27,110 +27,45 @@ public class Election {
         String electionTypeInput = scanner.nextLine();
 
         if (electionTypeInput.isEmpty() || (electionTypeInput.charAt(0) != 'p' && electionTypeInput.charAt(0) != 's')) {
-            System.out.println("Error, you didn't select a valid election type.");
+            System.out.println("Error: You didn't select a valid election type.");
             System.exit(1);
         }
 
         electionType = electionTypeInput.charAt(0);
         
         // prompt for ballotFileName
-        System.out.println("Enter ballot file's name: ");
+        System.out.print("Enter ballot file's name: ");
+        ballotFileName = scanner.nextLine().trim();
+        validateBallotFile(ballotFileName);
 
-        String ballotFileNameInput = scanner.nextLine();
-        File f = new File(ballotFileNameInput);
-
-        int lastDotIndex = ballotFileNameInput.lastIndexOf('.');
-        String extension = ballotFileNameInput.substring(lastDotIndex + 1);
-
-        if (!f.isFile() || !extension.equals("csv")) {
-            System.out.println("Error, you didn't enter a valid ballot file name or it doesn't exist.");
-            System.exit(1);
-        }
-
-        ballotFileName = ballotFileNameInput;
-
-        // set numSeats and candidates from number of columns in ballot file
-        File ballotFile = new File(ballotFileName);
-        Scanner ballotFileReader;
-        try {
-            ballotFileReader = new Scanner(ballotFile);
-            if (ballotFileReader.hasNextLine()) {
-                candidates = ballotFileReader.nextLine().split(",");
-                numSeats = candidates.length;
-            }
-            ballotFileReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Error opening ballot file.");
-            e.printStackTrace();
-        }
-
-        if (electionType == 'p') {
-            input = new PluralityInput("plurality", numSeats, ballotFileName);
-            votingAlgorithm = new PluralityAlgorithm(this);
-        } else {
-            String auditFileName;
-            boolean shuffle;
+        if (electionType == 's') {
             
             // prompt for auditFileName
             System.out.print("Enter a name for your audit file (without the extension): ");
-            String auditFileNameInput = scanner.nextLine();
-            if (auditFileNameInput.contains(".")) {
-                System.out.println("Invalid audit file name.");
+            auditFileName = scanner.nextLine().trim();
+            if (auditFileName.isEmpty()) {
+                System.out.println("Error: Audit file name can't be empty.");
                 System.exit(1);
             }
-            auditFileName = auditFileNameInput;
 
             // prompt for shuffle
             System.out.println("Turn shuffle on or off:");
             System.out.print("Type '1' for on, or '0' for off: ");
             String shuffleInput = scanner.nextLine();
-            if (shuffleInput.isEmpty() || (shuffleInput.charAt(0) != '1' && shuffleInput.charAt(0) != '0')) {
-                System.out.println("Error, invalid shuffle input.");
-                System.exit(1);
-            }
-            if (shuffleInput.charAt(0) == '1') {
-                shuffle = false;
-            } else {
-                shuffle = true;
-            }
+            shuffle = parseShuffle(shuffleInput);
 
-            input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
-            votingAlgorithm = new STVAlgorithm();
         }
-
-        scanner.close();
     }
 
-    public void processBallotFile() {
-        String ballotFileName = input.getBallotFileName();
-        File ballotFile = new File(ballotFileName);
-        Scanner ballotFileReader;
+    public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
-            ballotFileReader = new Scanner(ballotFile);
-            // skip first line of candidates
-            ballotFileReader.nextLine();
-
-            int id = 0;
-            // iterate through all ballots
-            while (ballotFileReader.hasNextLine()) {
-                Ballot newBallot;
-                String[] ballotLine = ballotFileReader.nextLine().split(",");
-                int[] vote = new int[ballotLine.length];
-                for (int i = 0; i < ballotLine.length; i++) {
-                    vote[i] = Integer.parseInt(ballotLine[i]);
-                }
-                if (input.getAlgorithm() == "plurality") {
-                    newBallot = new PluralityBallot(vote);
-                } else {
-                    newBallot = new STVBallot(id++, vote);
-                }
-                ballots.add(newBallot);
-            }
-
-            ballotFileReader.close();
+            String fileName = this.ballotFileName;
+            candidates = ballotFileReader.readCandidates(fileName);
+            createInputObject();
+            ballots = ballotFileReader.readBallots(fileName, input.getAlgorithm());
         } catch (FileNotFoundException e) {
-            System.out.println("Error processing ballot file");
-            e.printStackTrace();
+            System.out.println("Error processing ballot file: " + e.getMessage());
+            System.exit(1);
         }
     }
 
@@ -150,11 +85,43 @@ public class Election {
         return ballots;
     }
 
+    private void validateBallotFile(String fileName) {
+        File file = new File(fileName);
+        if (!file.exists() || !fileName.endsWith(".csv")) {
+            System.out.println("Error: invalid ballot file");
+            System.exit(1);
+        }
+    }
+
+    private boolean parseShuffle(String shuffleInput) {
+        if (shuffleInput.isEmpty() || (shuffleInput.charAt(0) != '1' && shuffleInput.charAt(0) != '0')) {
+            System.out.println("Error: invalid shuffle input.");
+            System.exit(1);
+        }
+        if (shuffleInput.charAt(0) == '1') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void createInputObject() {
+        int numSeats = candidates.length;
+        if (electionType == 'p') {
+            input = new PluralityInput("plurality", numSeats, ballotFileName);
+            votingAlgorithm = new PluralityAlgorithm(this);
+        } else {
+            input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
+            votingAlgorithm = new STVAlgorithm();
+        }
+    }
+
     public static void main(String[] args) {
         Election election = new Election();
         Scanner scanner = new Scanner(System.in);
+        BallotFileReader ballotFileReader = new BallotFileReader();
         election.promptForInput(scanner);
-        election.processBallotFile();
+        election.processBallotFile(ballotFileReader);
         election.runElection();
     }
 
