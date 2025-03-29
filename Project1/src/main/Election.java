@@ -14,6 +14,7 @@ public class Election {
     private String[] candidates;
     private InitialInput input;
     private VotingAlgorithm votingAlgorithm;
+    private int numSeats;
 
     private char electionType;
     private String ballotFileName;
@@ -23,7 +24,7 @@ public class Election {
 /**
  * Prompts user for input on election information.
  * 
- * @param scanner scanner object used to read user input.
+ * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
  */
     public void promptForInput(Scanner scanner) {
         // prompt for election type
@@ -63,6 +64,10 @@ public class Election {
             shuffle = parseShuffle(shuffleInput);
 
         }
+
+        // prompt for number of seats
+        System.out.print("Enter number of seats: ");
+        numSeats = Integer.parseInt(scanner.nextLine().trim());
     }
 
     /**
@@ -117,6 +122,15 @@ public class Election {
     }
 
     /**
+     * Gets number of seats.
+     * 
+     * @return number of seats
+     */
+    public int getNumSeats() {
+        return numSeats;
+    }
+
+    /**
      * Checks ballot file to make sure it exists and ends with '.csv'.
      * 
      * @param fileName the name of the ballot file to check
@@ -151,7 +165,6 @@ public class Election {
      * Creates input object for election based off of selected election type.
      */
     private void createInputObject() {
-        int numSeats = candidates.length;
         if (electionType == 'p') {
             input = new PluralityInput("plurality", numSeats, ballotFileName);
             votingAlgorithm = new PluralityAlgorithm(this);
