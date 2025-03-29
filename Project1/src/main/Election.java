@@ -99,9 +99,9 @@ public class Election {
     }
 
     /**
-     * Gets string list of candidates for election.
+     * Gets string array of candidates for election.
      * 
-     * @return String list of candidates
+     * @return String array of candidates
      */
     public String[] getCandidates() {
         return candidates;

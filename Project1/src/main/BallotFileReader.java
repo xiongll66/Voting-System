@@ -6,7 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Class for reading and processing ballot data from ballot file.
+ */
 public class BallotFileReader {
+
+    /**
+     * Reads candidates from ballot file.
+     * 
+     * @param fileName The name of the ballot file to read candidates from
+     * @return String array of candidate names
+     * @throws FileNotFoundException If given file cannot be found
+     */
     public String[] readCandidates(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         try (Scanner scanner = new Scanner(file)) {
@@ -14,6 +25,14 @@ public class BallotFileReader {
         }
     }
 
+    /**
+     * Reads ballot from given ballot file. 
+     * 
+     * @param fileName The name of the ballot file to read ballots from
+     * @param algorithmType The algorithm type for the election (plurality or STV)
+     * @return A list of Ballot objects
+     * @throws FileNotFoundException If given file cannot be found
+     */
     public List<Ballot> readBallots(String fileName, String algorithmType) throws FileNotFoundException {
         List<Ballot> ballots = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {
