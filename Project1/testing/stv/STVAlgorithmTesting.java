@@ -21,21 +21,23 @@ public class STVAlgorithmTesting {
         election.setCandidates(new String[]{"A", "B", "C"});
         election.setInput(new STVInput("s", 1, "elimination.csv", "audit", false));
         stvAlgorithm = new STVAlgorithm(election);
+        stvAlgorithm.counterList = (List<Ballot>[]) new ArrayList[election.getCandidates().length];
+        for (int i = 0; i < stvAlgorithm.counterList.length; i++) {
+            stvAlgorithm.counterList[i] = new ArrayList<>();  // Initializes each list in the array to hold STVBallot
+        }
+        stvAlgorithm.firstBallotTimes = new int[election.getCandidates().length];
         ballots = new ArrayList<>();
     }
 
     @Test
     void testCalculateDroopQuota() {
-        // Add test ballots (3 ballots)
-        ballots.add(new STVBallot(1, new int[]{1,2,3}));
-        ballots.add(new STVBallot(2, new int[]{1,3,2}));
-        ballots.add(new STVBallot(3, new int[]{2,1,3}));
+        // Test with 100 ballots and 2 seats
+        stvAlgorithm.calculateDroopQuota(100, 2);
+        assertEquals(34, stvAlgorithm.droopQuota); // 100/(2+1) + 1 = 34
         
-        // Calculate quota based on actual ballots and input seats
-        stvAlgorithm.calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
-        
-        // Verify quota calculation (3 ballots, 1 seat: (3/(1+1))+1 = 2)
-        assertEquals(2, stvAlgorithm.droopQuota);
+        // Test edge case with minimal ballots
+        stvAlgorithm.calculateDroopQuota(3,  ((STVInput) election.getInput()).getNumSeats());
+        assertEquals(2, stvAlgorithm.droopQuota); // 3/(1+1) + 1 = 2
     }
 
     @Test
@@ -49,12 +51,11 @@ public class STVAlgorithmTesting {
 
         // Shuffle off - should remain same
         stvAlgorithm.shuffleBallots(testBallots, ((STVInput) election.getInput()).getShuffle());
-        assertEquals(original, testBallots);
+        assertIterableEquals(original, testBallots);
 
         // Shuffle on - should be different
         stvAlgorithm.shuffleBallots(testBallots, true);
         assertNotEquals(original, testBallots);
-
     }
 
     @Test
@@ -65,7 +66,7 @@ public class STVAlgorithmTesting {
         ballots.add(new STVBallot(3, new int[]{3, 1, 2})); // B first 
         ballots.add(new STVBallot(4, new int[]{3, 1, 2})); // B first
         ballots.add(new STVBallot(5, new int[]{2, 3, 1})); // C first
-
+        stvAlgorithm.calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         stvAlgorithm.redistributeCandidateBallots(ballots);
 
         // Verify results (quota = 3 votes needed to win)
@@ -74,6 +75,6 @@ public class STVAlgorithmTesting {
         
         assertEquals(2, stvAlgorithm.loserList.size()); // two losers
         assertEquals("C", stvAlgorithm.loserList.get(0)); // C eliminated first
-        assertEquals("B", stvAlgorithm.loserList.get(1)); 
+        assertEquals("B", stvAlgorithm.loserList.get(1));
     }
 }
