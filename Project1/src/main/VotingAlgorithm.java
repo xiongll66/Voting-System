@@ -8,7 +8,7 @@ import java.util.List;
  * including handling election data, processing results and 
  * displaying it on console.
  */
-abstract class VotingAlgorithm {
+public abstract class VotingAlgorithm {
     /** The election associated with this voting algorithm. */
     protected Election election; 
 
