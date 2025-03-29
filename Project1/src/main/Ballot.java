@@ -17,9 +17,11 @@ abstract public class Ballot {
     }
 
     /**
-     * Abstract method to get vote.
+     * method to get vote.
      * 
      * @return an array of integers representing vote
      */
-    abstract public int[] getVote();
+    public int[] getVote() {
+        return this.vote;
+    };
 }
