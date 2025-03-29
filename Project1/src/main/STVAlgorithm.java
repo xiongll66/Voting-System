@@ -50,8 +50,9 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Constructs an STVAlgorithm instance.
      * Initializes elected and non-elected candidate lists.
      */
-    public STVAlgorithm() {
+    public STVAlgorithm(Election election) {
         super();
+        this.election = election;
         this.electedList = new LinkedHashMap<>();
         this.nonElectedList = new LinkedHashMap<>();
     }
