@@ -170,7 +170,7 @@ public class Election {
             votingAlgorithm = new PluralityAlgorithm(this);
         } else {
             input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
-            votingAlgorithm = new STVAlgorithm();
+            votingAlgorithm = new STVAlgorithm(this);
         }
     }
 
