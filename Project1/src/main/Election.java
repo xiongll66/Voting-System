@@ -25,19 +25,19 @@ public class Election {
  * Prompts user for input on election information.
  * 
  * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
+ * @throws Exception 
  */
-    public void promptForInput(Scanner scanner) {
+    public void promptForInput(Scanner scanner) throws Exception {
         // prompt for election type
         System.out.println("Select election type:");
         System.out.println("Type 'p' for plurality voting");
         System.out.println("Type 's' for single transferable voting (STV)");
         System.out.print("Your selection [p/s]: ");
 
-        String electionTypeInput = scanner.nextLine();
+        String electionTypeInput = scanner.nextLine().trim();
 
         if (electionTypeInput.isEmpty() || (electionTypeInput.charAt(0) != 'p' && electionTypeInput.charAt(0) != 's')) {
-            System.out.println("Error: You didn't select a valid election type.");
-            System.exit(1);
+            throw new Exception("Invalid election type.");
         }
 
         electionType = electionTypeInput.charAt(0);
@@ -134,12 +134,12 @@ public class Election {
      * Checks ballot file to make sure it exists and ends with '.csv'.
      * 
      * @param fileName the name of the ballot file to check
+     * @throws Exception 
      */
-    private void validateBallotFile(String fileName) {
+    private void validateBallotFile(String fileName) throws Exception {
         File file = new File(fileName);
         if (!file.exists() || !fileName.endsWith(".csv")) {
-            System.out.println("Error: invalid ballot file");
-            System.exit(1);
+            throw new Exception("Invalid ballot file.");
         }
     }
 
@@ -170,7 +170,7 @@ public class Election {
             votingAlgorithm = new PluralityAlgorithm(this);
         } else {
             input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
-            votingAlgorithm = new STVAlgorithm();
+            votingAlgorithm = new STVAlgorithm(this);
         }
     }
 
@@ -184,7 +184,12 @@ public class Election {
         Election election = new Election();
         Scanner scanner = new Scanner(System.in);
         BallotFileReader ballotFileReader = new BallotFileReader();
-        election.promptForInput(scanner);
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return;
+        }
         election.processBallotFile(ballotFileReader);
         election.runElection();
     }

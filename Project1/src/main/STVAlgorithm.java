@@ -50,8 +50,9 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Constructs an STVAlgorithm instance.
      * Initializes elected and non-elected candidate lists.
      */
-    public STVAlgorithm() {
+    public STVAlgorithm(Election election) {
         super();
+        this.election = election;
         this.electedList = new LinkedHashMap<>();
         this.nonElectedList = new LinkedHashMap<>();
     }
@@ -77,7 +78,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         firstBallotTimes = new int[election.getCandidates().length];
         calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         redistributeCandidateBallots(ballots);
-        generateAuditFile("audit_report.txt");
+        generateAuditFile(((STVInput) election.getInput()).getAuditFileName() + ".txt");
     }
 
     /**
@@ -368,13 +369,26 @@ public class STVAlgorithm extends VotingAlgorithm {
     
         for (Ballot ballot : eliminatedBallots) { 
             STVBallot stvBallot = (STVBallot) ballot;
+            stvBallot.incrementPreference(); // Increment to track the next preference
             int nextPreference = stvBallot.getPreference();
-            if (nextPreference != -1) {
-                // Increment to track the next preference
-                stvBallot.incrementPreference();
-                counterList[nextPreference].add(stvBallot);
-                time++;
-                firstBallotTimes[nextPreference] = time;
+            if (nextPreference == -1) {
+                auditLog.add("Ballot " + stvBallot.getId() + " can't be used anymore");
+                continue;
+            }
+
+            // Search for candidate with the next preference rank
+            for (int i = 0; i < stvBallot.getVote().length; i++) {
+                if (stvBallot.getVote()[i] == nextPreference) {
+                    if (!electedList.containsKey(i) && !nonElectedList.containsKey(i)) {
+                        counterList[i].add(stvBallot);
+                        time++;
+                        firstBallotTimes[i] = time;
+                        auditLog.add("Ballot " + stvBallot.getId() + " from eliminated "
+                                + election.getCandidates()[candidateIndex] + " transferred to "
+                                + election.getCandidates()[i]);
+                        break;
+                    }
+                }
             }
         }
     }
