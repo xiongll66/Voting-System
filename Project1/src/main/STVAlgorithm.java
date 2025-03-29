@@ -38,10 +38,10 @@ public class STVAlgorithm extends VotingAlgorithm {
     public LinkedHashMap<Integer, Integer> nonElectedList;
 
     /** Timestamp counter for ballot assignments */
-    private int time;
+    public  int time;
 
     /** Tracks when each candidate received their first ballot */
-    private int[] firstBallotTimes;
+    public  int[] firstBallotTimes;
 
     /** Audit log entries for the election process */
     final List<String> auditLog = new ArrayList<>();
@@ -253,7 +253,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * 
      * @param candidateIndex The index of the elected candidate with surplus
      */
-    private void redistributeSurplusBallots(int candidateIndex) {
+    public void redistributeSurplusBallots(int candidateIndex) {
         List<Ballot> allBallots = counterList[candidateIndex];
         int surplusCount = allBallots.size() - droopQuota;
         if (surplusCount <= 0) {
@@ -311,7 +311,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Handles ties using breakTie() method if any.
      * Updates nonElectedList and triggers ballot redistribution.
      */
-    private void eliminateWeakestCandidate() {
+    public void eliminateWeakestCandidate() {
         // track the lowest num vote
         int minVotes = Integer.MAX_VALUE; 
         //List tie candidates
@@ -356,7 +356,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * 
      * @param candidateIndex The index of the eliminated candidate
      */
-    private void redistributeEliminatedBallots(int candidateIndex) {
+    public void redistributeEliminatedBallots(int candidateIndex) {
         // get the ballots from that eliminated candidate
         List<Ballot> eliminatedBallots = new ArrayList<>(counterList[candidateIndex]); 
         //remove the ballot from the pile 
@@ -383,7 +383,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Winners are those who reached quota, in order of election.
      * Losers include eliminated candidates and remaining unelected candidates.
      */
-    private void determineWinnersAndLosers() {
+    public void determineWinnersAndLosers() {
         winnerList.clear();
         loserList.clear();
     
@@ -427,7 +427,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * @param totalCandidates Total number of candidates in the election
      * @throws IllegalArgumentException if any ballot is invalid
      */
-    private void validateBallots(List<Ballot> ballots, int totalCandidates) {
+    public void validateBallots(List<Ballot> ballots, int totalCandidates) {
         int minRequiredRankings = (int) Math.ceil(totalCandidates / 2.0);
         
         for (Ballot ballot : ballots) {
