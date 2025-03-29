@@ -1,4 +1,4 @@
-package Project1.testFiles.plurality;
+package Project1.testing.plurality;
 import main.PluralityBallot;
 import main.Election;
 import main.PluralityAlgorithm;
