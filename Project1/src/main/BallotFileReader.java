@@ -42,7 +42,11 @@ public class BallotFileReader {
                 String[] ballotLine = scanner.nextLine().split(",");
                 int[] vote = new int[ballotLine.length];
                 for (int i = 0; i < ballotLine.length; i++) {
-                    vote[i] = Integer.parseInt(ballotLine[i]);
+                    try {
+                        vote[i] = Integer.parseInt(ballotLine[i]);
+                    } catch (NumberFormatException e) {
+                        vote[i] = 0;
+                    }
                 }
                 if (algorithmType.equals("plurality")) {
                     ballots.add(new PluralityBallot(vote));
