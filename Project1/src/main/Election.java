@@ -27,7 +27,7 @@ public class Election {
 
         String electionTypeInput = scanner.nextLine();
 
-        if (electionTypeInput.isEmpty() || electionTypeInput.charAt(0) != 'p' || electionTypeInput.charAt(0) != 's') {
+        if (electionTypeInput.isEmpty() || (electionTypeInput.charAt(0) != 'p' && electionTypeInput.charAt(0) != 's')) {
             System.out.println("Error, you didn't select a valid election type.");
             System.exit(1);
         }
@@ -39,7 +39,9 @@ public class Election {
 
         String ballotFileNameInput = scanner.nextLine();
         File f = new File(ballotFileNameInput);
-        String extension = ballotFileNameInput.split(".")[1];
+        
+        int lastDotIndex = ballotFileNameInput.lastIndexOf('.');
+        String extension = ballotFileNameInput.substring(lastDotIndex + 1);
 
         if (!f.isFile() || !extension.equals("csv")) {
             System.out.println("Error, you didn't enter a valid ballot file name or it doesn't exist.");
@@ -83,7 +85,7 @@ public class Election {
             System.out.println("Turn shuffle on or off:");
             System.out.print("Type '1' for on, or '0' for off: ");
             String shuffleInput = scanner.nextLine();
-            if (shuffleInput.isEmpty() || shuffleInput.charAt(0) != '1' || shuffleInput.charAt(0) != '0') {
+            if (shuffleInput.isEmpty() || (shuffleInput.charAt(0) != '1' && shuffleInput.charAt(0) != '0')) {
                 System.out.println("Error, invalid shuffle input.");
                 System.exit(1);
             }
