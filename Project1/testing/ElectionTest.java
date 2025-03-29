@@ -1,6 +1,7 @@
 package Project1.testing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -36,7 +37,11 @@ public class ElectionTest {
 
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
-        election.promptForInput(scanner);
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         election.processBallotFile(ballotFileReader);
         
         InitialInput input = election.getInput();
@@ -51,7 +56,11 @@ public class ElectionTest {
 
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("s\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
-        election.promptForInput(scanner);
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         election.processBallotFile(ballotFileReader);
         
         InitialInput input = election.getInput();
@@ -60,8 +69,27 @@ public class ElectionTest {
     }
 
     @Test
-    public void testProcessBallotFile() {
-        
+    public void testPromptForInputWrongElectionTypeInput() {
+        Path csvPath = Paths.get("Project1/testing/stv/elimination.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input 't' for election type
+        Scanner scanner = new Scanner("t\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
+        assertThrows(Exception.class, () -> {
+            election.promptForInput(scanner);
+        });
+    }
+
+    @Test
+    public void testPromptForInputEmptyElectionTypeInput() {
+        Path csvPath = Paths.get("Project1/testing/stv/elimination.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user inputting an empty input for election type
+        Scanner scanner = new Scanner("\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
+        assertThrows(Exception.class, () -> {
+            election.promptForInput(scanner);
+        });
     }
     
 }
