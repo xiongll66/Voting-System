@@ -78,7 +78,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         firstBallotTimes = new int[election.getCandidates().length];
         calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         redistributeCandidateBallots(ballots);
-        generateAuditFile("audit_report.txt");
+        generateAuditFile(((STVInput) election.getInput()).getAuditFileName() + ".txt");
     }
 
     /**
