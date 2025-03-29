@@ -5,7 +5,10 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
+/**
+ * Election is the main driver class of the voting system. It prompts the user for election information,
+ * processes the ballot file, and invokes the appropriate voting algorithm.
+ */
 public class Election {
     private List<Ballot> ballots;
     private String[] candidates;
@@ -17,6 +20,11 @@ public class Election {
     private String auditFileName;
     private boolean shuffle;
 
+/**
+ * Prompts user for input on election information.
+ * 
+ * @param scanner scanner object used to read user input.
+ */
     public void promptForInput(Scanner scanner) {
         // prompt for election type
         System.out.println("Select election type:");
@@ -57,6 +65,11 @@ public class Election {
         }
     }
 
+    /**
+     * Process the ballot file and calls function to create the input object.
+     * 
+     * @param ballotFileReader Object responsible for reading ballot file
+     */
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
@@ -69,22 +82,45 @@ public class Election {
         }
     }
 
+    /**
+     * Runs election based off of chosen algorithm.
+     */
     public void runElection() {
         votingAlgorithm.runAlgorithm(ballots);
     }
 
+    /**
+     * Gets input for the elction.
+     * 
+     * @return the initial input object that contains election setup information.
+     */
     public InitialInput getInput() {
         return input;
     }
 
+    /**
+     * Gets string list of candidates for election.
+     * 
+     * @return String list of candidates
+     */
     public String[] getCandidates() {
         return candidates;
     }
 
+    /**
+     * Gets list of ballots cast in election.
+     * 
+     * @return list of ballot objects
+     */
     public List<Ballot> getBallots() {
         return ballots;
     }
 
+    /**
+     * Checks ballot file to make sure it exists and ends with '.csv'.
+     * 
+     * @param fileName the name of the ballot file to check
+     */
     private void validateBallotFile(String fileName) {
         File file = new File(fileName);
         if (!file.exists() || !fileName.endsWith(".csv")) {
@@ -93,6 +129,12 @@ public class Election {
         }
     }
 
+    /**
+     * Checks whether shuffle is on or off.
+     * 
+     * @param shuffleInput the input for the shuffle
+     * @return True if shuffle is on, False otherwise
+     */
     private boolean parseShuffle(String shuffleInput) {
         if (shuffleInput.isEmpty() || (shuffleInput.charAt(0) != '1' && shuffleInput.charAt(0) != '0')) {
             System.out.println("Error: invalid shuffle input.");
@@ -105,6 +147,9 @@ public class Election {
         }
     }
 
+    /**
+     * Creates input object for election based off of selected election type.
+     */
     private void createInputObject() {
         int numSeats = candidates.length;
         if (electionType == 'p') {
@@ -116,6 +161,12 @@ public class Election {
         }
     }
 
+    /**
+     * Main method to run election program. 
+     * Initializes the election, prompts the user for input, processes the ballot file, and runs the election.
+     * 
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         Election election = new Election();
         Scanner scanner = new Scanner(System.in);
