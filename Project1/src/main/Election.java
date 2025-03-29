@@ -75,7 +75,7 @@ public class Election {
      * 
      * @param ballotFileReader Object responsible for reading ballot file
      */
-    public void processBallotFile(BallotFileReader ballotFileReader) {
+    private void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
             candidates = ballotFileReader.readCandidates(fileName);
@@ -90,7 +90,7 @@ public class Election {
     /**
      * Runs election based off of chosen algorithm.
      */
-    public void runElection() {
+    private void runElection() {
         votingAlgorithm.runAlgorithm(ballots);
     }
 
