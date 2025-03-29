@@ -108,7 +108,8 @@ public class STVAlgorithm extends VotingAlgorithm {
 
     /**
      * Manages the core STV process including:
-     * - Initial ballot distribution
+     * - Call shuffleBallots()
+     * - Distribute all ballot to allCandidate
      * - Election of candidates who reach quota
      * - Call redistributeSurplusBallots()
      * - Call eliminateWeakestCandidate()
@@ -118,14 +119,15 @@ public class STVAlgorithm extends VotingAlgorithm {
      */
     public void redistributeCandidateBallots(List<Ballot> ballots) {
         shuffleBallots(ballots, ((STVInput) election.getInput()).getShuffle());
-        for (int i = 0; i < counterList.length; i++) {
-            counterList[i] = new ArrayList<>();
-        }
 
+        int totalCandidates = election.getCandidates().length;
+    
+        // Validate ballots before processing
+        validateBallots(ballots, totalCandidates);
 
         auditLog.add("Ballots DISTRIBUTION");
 
-        //assign all ballots to all candidates
+        //Assign all ballots to all candidates
         for (Ballot ballot : ballots) {
             STVBallot stvBallot = (STVBallot) ballot;
             int[] ballotRanks = stvBallot.getVote();
@@ -184,15 +186,11 @@ public class STVAlgorithm extends VotingAlgorithm {
             // Header information
             writer.println("=== STV ELECTION AUDIT REPORT ===");
             writer.println("Date: " + new Date());
-            writer.println("\nELECTION PARAMETERS:");
+            writer.println("\nELECTION RESULTS:");
             writer.println("Type: STV");
-            writer.println("Seats: " + election.getInput().numSeats);
-            writer.println("Candidates: " + election.getCandidates().length);
-            writer.println("Ballots: " + counterList[0].size()); // Initial count
+            writer.println("Number of seats: " + election.getInput().numSeats);
+            writer.println("Number of candidates: " + election.getCandidates().length);
             writer.println("Droop Quota: " + droopQuota);
-            
-            // Results
-            writer.println("\nFINAL RESULTS:");
             writer.println("Winners: " + winnerList);
             writer.println("Losers: " + loserList);
             
@@ -398,6 +396,22 @@ public class STVAlgorithm extends VotingAlgorithm {
         for (int candidateIndex : nonElectedList.keySet()) {
             loserList.add(election.getCandidates()[candidateIndex]);
         }
+
+        //Open seat, select the last candidate from the nonElected list
+        if (winnerList.size() < election.getInput().numSeats) {
+            // Get the last candidate added to the nonElectedList
+            List<Integer> nonElectedKeys = new ArrayList<>(nonElectedList.keySet());
+       
+            if (!nonElectedKeys.isEmpty()) {
+                int lastIndex = nonElectedKeys.get(nonElectedKeys.size() - 1);
+       
+                // Promote to winner
+                winnerList.add(election.getCandidates()[lastIndex]);
+                auditLog.add("Candidate " + election.getCandidates()[lastIndex] + " from nonElected list is elected");
+                loserList.remove(election.getCandidates()[lastIndex]);
+            }
+        }
+ 
     
         // Add remaining candidates (not elected/eliminated) in their original index order
         for (int i = 0; i < election.getCandidates().length; i++) {
@@ -406,6 +420,37 @@ public class STVAlgorithm extends VotingAlgorithm {
             }
         }
     }
+
+    /**
+     * Validates that all ballots meet the minimum ranking requirements
+     * @param ballots List of ballots to validate
+     * @param totalCandidates Total number of candidates in the election
+     * @throws IllegalArgumentException if any ballot is invalid
+     */
+    private void validateBallots(List<Ballot> ballots, int totalCandidates) {
+        int minRequiredRankings = (int) Math.ceil(totalCandidates / 2.0);
+        
+        for (Ballot ballot : ballots) {
+            //Get all ballots
+            STVBallot stvBallot = (STVBallot) ballot;
+            int[] ranks = stvBallot.getVote();
+            int rankedCount = 0;
+            
+            for (int rank : ranks) {
+                if (rank > 0) rankedCount++;
+            }
+            
+            //
+            if (rankedCount < minRequiredRankings) {
+                String errorMsg = String.format(
+                    "Ballot %d invalid: ranked %d candidates (minimum %d required)",
+                    stvBallot.getId(), rankedCount, minRequiredRankings
+                );
+                throw new IllegalArgumentException(errorMsg);
+            }
+        }
+    }
+    
 
 }
 
