@@ -35,6 +35,7 @@ public class STVAlgorithmTesting {
         stvAlgorithm.calculateDroopQuota(100, 2);
         assertEquals(34, stvAlgorithm.droopQuota); // 100/(2+1) + 1 = 34
         
+        
         // Test edge case with minimal ballots
         stvAlgorithm.calculateDroopQuota(3,  ((STVInput) election.getInput()).getNumSeats());
         assertEquals(2, stvAlgorithm.droopQuota); // 3/(1+1) + 1 = 2
