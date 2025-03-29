@@ -1,9 +1,9 @@
 package main;
 
-import java.util.List;
-import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Election is the main driver class of the voting system. It prompts the user for election information,
@@ -25,7 +25,7 @@ public class Election {
  * Prompts user for input on election information.
  * 
  * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
- * @throws Exception 
+ * @throws Exception throws an exception if there are invalid inputs
  */
     public void promptForInput(Scanner scanner) throws Exception {
         // prompt for election type
@@ -75,7 +75,7 @@ public class Election {
      * 
      * @param ballotFileReader Object responsible for reading ballot file
      */
-    public void processBallotFile(BallotFileReader ballotFileReader) {
+    private void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
             candidates = ballotFileReader.readCandidates(fileName);
@@ -90,7 +90,7 @@ public class Election {
     /**
      * Runs election based off of chosen algorithm.
      */
-    public void runElection() {
+    private void runElection() {
         votingAlgorithm.runAlgorithm(ballots);
     }
 
@@ -110,6 +110,24 @@ public class Election {
      */
     public String[] getCandidates() {
         return candidates;
+    }
+
+    /**
+     * Sets the candidates for the election.
+     *
+     * @param candidates An array of strings representing the candidates' names.
+     */
+    public void setCandidates(String[] candidates) {
+        this.candidates = candidates;
+    }
+
+    /**
+     * Sets the initial input for the election.
+     *
+     * @param input The InitialInput object that contains configuration details for the election.
+     */
+    public void setInput(InitialInput input) {
+        this.input = input;
     }
 
     /**

@@ -1,11 +1,21 @@
 package main;
+
 /**
  * Class for election input using STV algorithm. 
  */
 public class STVInput extends InitialInput{
-    public String auditFileName;
-    public boolean shuffle;
+    private String auditFileName;
+    private boolean shuffle;
     
+    /**
+     * Constructor for STVInput.
+     * 
+     * @param alg stv
+     * @param numSeats number of seats
+     * @param ballotFileName name of ballot file
+     * @param auditFileName name of audit file
+     * @param shuffle true for on, false for off
+     */
     public STVInput(String alg, int numSeats, String ballotFileName, String auditFileName, boolean shuffle) {
         super(alg, numSeats, ballotFileName);
         this.auditFileName = auditFileName;
