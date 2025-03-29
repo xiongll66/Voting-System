@@ -39,7 +39,7 @@ public class BallotFileReader {
             scanner.nextLine();
             int id = 0;
             while (scanner.hasNextLine()) {
-                String[] ballotLine = scanner.nextLine().split(",");
+                String[] ballotLine = scanner.nextLine().split(",", -1);
                 int[] vote = new int[ballotLine.length];
                 for (int i = 0; i < ballotLine.length; i++) {
                     try {
