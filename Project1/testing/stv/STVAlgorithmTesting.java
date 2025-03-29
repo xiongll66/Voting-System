@@ -44,13 +44,11 @@ public class STVAlgorithmTesting {
     @Test
     public void testCalculateDroopQuota() {
         // Test with 100 ballots and 2 seats
-        election.getInput().numSeats = 2;
-        stv.calculateDroopQuota(100);
+        stv.calculateDroopQuota(100, 2);
         assertEquals(34, stv.droopQuota); // (100/(2+1))+1 = 34
         
         // Test with 10 ballots and 1 seat
-        election.getInput().numSeats = 1;
-        stv.calculateDroopQuota(10);
+        stv.calculateDroopQuota(10, 1);
         assertEquals(6, stv.droopQuota); // (10/(1+1))+1 = 6
     }
     
