@@ -18,7 +18,8 @@ public class PluralityAlgorithmTest {
         algorithm = new PluralityAlgorithm(election); 
         
     }
-
+ 
+    
     public static void main(String[] args) {
         List<Ballot> ballotsList = new ArrayList<>();
         ballotsList.add(new PluralityBallot(new int[]{1, 0, 0}));
