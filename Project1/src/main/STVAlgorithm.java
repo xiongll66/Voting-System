@@ -38,10 +38,10 @@ public class STVAlgorithm extends VotingAlgorithm {
     public LinkedHashMap<Integer, Integer> nonElectedList;
 
     /** Timestamp counter for ballot assignments */
-    private int time;
+    public  int time;
 
     /** Tracks when each candidate received their first ballot */
-    private int[] firstBallotTimes;
+    public  int[] firstBallotTimes;
 
     /** Audit log entries for the election process */
     final List<String> auditLog = new ArrayList<>();
@@ -75,7 +75,7 @@ public class STVAlgorithm extends VotingAlgorithm {
 
         time = 0;
         firstBallotTimes = new int[election.getCandidates().length];
-        calculateDroopQuota(ballots.size());
+        calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         redistributeCandidateBallots(ballots);
         generateAuditFile("audit_report.txt");
     }
@@ -101,9 +101,10 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Formula: (total_ballots / (seats + 1)) + 1
      * 
      * @param numBallots The total number of ballots
+     * @param numSeats The number of seats
      */
-    public void calculateDroopQuota(int numBallots) {
-        droopQuota = (numBallots / (election.getInput().numSeats + 1)) + 1;
+    public void calculateDroopQuota(int numBallots, int numSeats) {
+        droopQuota = (numBallots / (numSeats + 1)) + 1;
     }
 
     /**
@@ -145,7 +146,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Main election rounds loops until all seats are filled
-        while (electedList.size() < election.getInput().numSeats) {
+        while (electedList.size() < election.getInput().getNumSeats()) {
             boolean electedThisRound = false;
 
             // Check for candidates meeting quota
@@ -188,7 +189,7 @@ public class STVAlgorithm extends VotingAlgorithm {
             writer.println("Date: " + new Date());
             writer.println("\nELECTION RESULTS:");
             writer.println("Type: STV");
-            writer.println("Number of seats: " + election.getInput().numSeats);
+            writer.println("Number of seats: " + election.getInput().getNumSeats());
             writer.println("Number of candidates: " + election.getCandidates().length);
             writer.println("Droop Quota: " + droopQuota);
             writer.println("Winners: " + winnerList);
@@ -214,7 +215,7 @@ public class STVAlgorithm extends VotingAlgorithm {
     public void displayResults() {
         System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: STV");
-        System.out.println("Number of Seats: " + election.getInput().numSeats);
+        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Winners: " + winnerList);
         System.out.println("Losers: " + loserList);
@@ -253,7 +254,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * 
      * @param candidateIndex The index of the elected candidate with surplus
      */
-    private void redistributeSurplusBallots(int candidateIndex) {
+    public void redistributeSurplusBallots(int candidateIndex) {
         List<Ballot> allBallots = counterList[candidateIndex];
         int surplusCount = allBallots.size() - droopQuota;
         if (surplusCount <= 0) {
@@ -311,7 +312,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Handles ties using breakTie() method if any.
      * Updates nonElectedList and triggers ballot redistribution.
      */
-    private void eliminateWeakestCandidate() {
+    public void eliminateWeakestCandidate() {
         // track the lowest num vote
         int minVotes = Integer.MAX_VALUE; 
         //List tie candidates
@@ -356,7 +357,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * 
      * @param candidateIndex The index of the eliminated candidate
      */
-    private void redistributeEliminatedBallots(int candidateIndex) {
+    public void redistributeEliminatedBallots(int candidateIndex) {
         // get the ballots from that eliminated candidate
         List<Ballot> eliminatedBallots = new ArrayList<>(counterList[candidateIndex]); 
         //remove the ballot from the pile 
@@ -383,7 +384,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * Winners are those who reached quota, in order of election.
      * Losers include eliminated candidates and remaining unelected candidates.
      */
-    private void determineWinnersAndLosers() {
+    public void determineWinnersAndLosers() {
         winnerList.clear();
         loserList.clear();
     
@@ -398,7 +399,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Open seat, select the last candidate from the nonElected list
-        if (winnerList.size() < election.getInput().numSeats) {
+        if (winnerList.size() < election.getInput().getNumSeats()) {
             // Get the last candidate added to the nonElectedList
             List<Integer> nonElectedKeys = new ArrayList<>(nonElectedList.keySet());
        
@@ -427,7 +428,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * @param totalCandidates Total number of candidates in the election
      * @throws IllegalArgumentException if any ballot is invalid
      */
-    private void validateBallots(List<Ballot> ballots, int totalCandidates) {
+    public void validateBallots(List<Ballot> ballots, int totalCandidates) {
         int minRequiredRankings = (int) Math.ceil(totalCandidates / 2.0);
         
         for (Ballot ballot : ballots) {

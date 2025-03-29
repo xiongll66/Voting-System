@@ -66,7 +66,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      */
     private void pluralityAlgorithmFunction(List<Ballot> ballots) {
         // Check if there is ballots 
-        if (election.getBallots() == null || election.getBallots().isEmpty()) {
+        if (election.getBallots().isEmpty() || election.getBallots() == null) {
             throw new IllegalArgumentException("Ballot from Election cannot be null or empty.");
         }
        
@@ -195,9 +195,11 @@ public class PluralityAlgorithm extends VotingAlgorithm{
     protected void displayResults() {
         System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: " + election.getInput().getAlgorithm());
-        System.out.println("Number of Seats: " + election.getInput().numSeats);
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Number of Ballots: " + election.getBallots().size());
+        System.out.println("Plurality Results:");
+        System.out.println("Election Type: " + election.getInput().getAlgorithm());
+        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
         System.out.println();    
 
         int totalVotes = 0;
@@ -224,7 +226,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
         }
 
     }
-     
+    @Override
     /**
      * Executes the Plurality voting algorithm.
      * 
@@ -232,7 +234,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      */
     public void runAlgorithm(List<Ballot> ballots) {
         
-        pluralityAlgorithmFunction(ballots); 
+        pluralityAlgorithmFunction(ballots);
         calculateWinner(); 
         displayResults();
     }

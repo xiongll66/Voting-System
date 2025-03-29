@@ -5,9 +5,9 @@ package main;
  */
 public abstract class InitialInput {
 
-    public String algorithm;
-    public int numSeats;
-    public String ballotFileName;
+    private String algorithm;
+    private int numSeats;
+    private String ballotFileName;
 
     /**
      * Constructor for InitialInput.

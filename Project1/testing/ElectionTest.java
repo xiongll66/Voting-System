@@ -1,25 +1,66 @@
 package Project1.testing;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
+import main.BallotFileReader;
 import main.Election;
+import main.InitialInput;
 
+/**
+ * Unit tests for Election class.
+ */
 public class ElectionTest {
     private Election election;
+    private BallotFileReader ballotFileReader;
 
     @BeforeEach
-    void setup() {
-        election = new Election();
+    public void setup() {
+        this.election = new Election();
+        ballotFileReader = new BallotFileReader();
     }
 
     @Test
-    void testPromptForInput() {
+    public void testPromptForInputPlurality() {
+        Path csvPath = Paths.get("Project1/testing/plurality/0tie1seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
+        election.promptForInput(scanner);
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("plurality", input.getAlgorithm());
     }
 
     @Test
-    void testProcessBallotFile() {
+    public void testPromptForInputSTV() {
+        Path csvPath = Paths.get("Project1/testing/stv/elimination.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("s\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
+        election.promptForInput(scanner);
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("stv", input.getAlgorithm());
+    }
+
+    @Test
+    public void testProcessBallotFile() {
         
     }
     
