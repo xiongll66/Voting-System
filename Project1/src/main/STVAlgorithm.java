@@ -103,7 +103,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * @param numBallots The total number of ballots
      */
     public void calculateDroopQuota(int numBallots) {
-        droopQuota = (numBallots / (election.getInput().numSeats + 1)) + 1;
+        droopQuota = (numBallots / (election.getInput().getNumSeats() + 1)) + 1;
     }
 
     /**
@@ -145,7 +145,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Main election rounds loops until all seats are filled
-        while (electedList.size() < election.getInput().numSeats) {
+        while (electedList.size() < election.getInput().getNumSeats()) {
             boolean electedThisRound = false;
 
             // Check for candidates meeting quota
@@ -188,7 +188,7 @@ public class STVAlgorithm extends VotingAlgorithm {
             writer.println("Date: " + new Date());
             writer.println("\nELECTION RESULTS:");
             writer.println("Type: STV");
-            writer.println("Number of seats: " + election.getInput().numSeats);
+            writer.println("Number of seats: " + election.getInput().getNumSeats());
             writer.println("Number of candidates: " + election.getCandidates().length);
             writer.println("Droop Quota: " + droopQuota);
             writer.println("Winners: " + winnerList);
@@ -214,7 +214,7 @@ public class STVAlgorithm extends VotingAlgorithm {
     public void displayResults() {
         System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: STV");
-        System.out.println("Number of Seats: " + election.getInput().numSeats);
+        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Winners: " + winnerList);
         System.out.println("Losers: " + loserList);
@@ -398,7 +398,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Open seat, select the last candidate from the nonElected list
-        if (winnerList.size() < election.getInput().numSeats) {
+        if (winnerList.size() < election.getInput().getNumSeats()) {
             // Get the last candidate added to the nonElectedList
             List<Integer> nonElectedKeys = new ArrayList<>(nonElectedList.keySet());
        
