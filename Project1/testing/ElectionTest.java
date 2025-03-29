@@ -91,5 +91,14 @@ public class ElectionTest {
             election.promptForInput(scanner);
         });
     }
+
+    @Test
+    public void testPromptForInputInvalidCSV() {
+        // Simulate user inputting an invalid csv file
+        Scanner scanner = new Scanner("p\ninvalid.csv\nauditFile\n1\n1\n");
+        assertThrows(Exception.class, () -> {
+            election.promptForInput(scanner);
+        });
+    }
     
 }
