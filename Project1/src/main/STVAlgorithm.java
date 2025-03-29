@@ -49,6 +49,8 @@ public class STVAlgorithm extends VotingAlgorithm {
     /**
      * Constructs an STVAlgorithm instance.
      * Initializes elected and non-elected candidate lists.
+     * 
+     * @param election The election object containing candidates and ballots
      */
     public STVAlgorithm(Election election) {
         super();

@@ -25,7 +25,7 @@ public class Election {
  * Prompts user for input on election information.
  * 
  * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
- * @throws Exception 
+ * @throws Exception throws an exception if there are invalid inputs
  */
     public void promptForInput(Scanner scanner) throws Exception {
         // prompt for election type
