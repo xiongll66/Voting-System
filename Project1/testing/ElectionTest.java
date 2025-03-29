@@ -35,13 +35,28 @@ public class ElectionTest {
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1");
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
         election.promptForInput(scanner);
         election.processBallotFile(ballotFileReader);
         
         InitialInput input = election.getInput();
         assertNotNull(input, "Input object was not initialized");
         assertEquals("plurality", input.getAlgorithm());
+    }
+
+    @Test
+    public void testPromptForInputSTV() {
+        Path csvPath = Paths.get("Project1/testing/stv/elimination.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("s\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
+        election.promptForInput(scanner);
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("stv", input.getAlgorithm());
     }
 
     @Test
