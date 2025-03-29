@@ -2,7 +2,6 @@ package main;
 public class STVBallot extends Ballot {
     private int id;
     private int preference;
-    private int[] vote; 
 
     public STVBallot(int id, int[] vote) {
         super(vote);
@@ -20,9 +19,5 @@ public class STVBallot extends Ballot {
     
     public int getPreference() {
         return preference;
-    }
-
-    public int[] getVote() {
-        return this.vote;
     }
 }
