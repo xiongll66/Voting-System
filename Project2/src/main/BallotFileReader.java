@@ -12,16 +12,25 @@ import java.util.Scanner;
 public class BallotFileReader {
 
     /**
-     * Reads candidates from ballot file.
-     * 
-     * @param fileName The name of the ballot file to read candidates from
-     * @return String array of candidate names
-     * @throws FileNotFoundException If given file cannot be found
+     * Reads the header of the ballot file
+     * @param fileName the name of the ballot file
+     * @return Header object containing election information
+     * @throws FileNotFoundException
      */
-    public String[] readCandidates(String fileName) throws FileNotFoundException {
+    public Header readHeader(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
+        String electionType;
+        int numSeats;
+        String[] candidates;
         try (Scanner scanner = new Scanner(file)) {
-            return scanner.nextLine().split(",");
+            electionType = scanner.nextLine();
+            numSeats = Integer.parseInt(scanner.nextLine());
+            scanner.nextLine(); // skip number of candidates line in header (not useful)
+            scanner.nextLine(); // skip number of ballots line in header (not useful)
+            candidates = scanner.nextLine().split(",");
+
+            Header header = new Header(electionType, numSeats, candidates);
+            return header;
         }
     }
 
