@@ -16,7 +16,7 @@ public class Election {
     private VotingAlgorithm votingAlgorithm;
     private int numSeats;
 
-    private char electionType;
+    private String electionType;
     private String ballotFileName;
     private String auditFileName;
     private boolean shuffle;
@@ -28,26 +28,13 @@ public class Election {
  * @throws Exception throws an exception if there are invalid inputs
  */
     public void promptForInput(Scanner scanner) throws Exception {
-        // prompt for election type
-        System.out.println("Select election type:");
-        System.out.println("Type 'p' for plurality voting");
-        System.out.println("Type 's' for single transferable voting (STV)");
-        System.out.print("Your selection [p/s]: ");
-
-        String electionTypeInput = scanner.nextLine().trim();
-
-        if (electionTypeInput.isEmpty() || (electionTypeInput.charAt(0) != 'p' && electionTypeInput.charAt(0) != 's')) {
-            throw new Exception("Invalid election type.");
-        }
-
-        electionType = electionTypeInput.charAt(0);
         
         // prompt for ballotFileName
         System.out.print("Enter ballot file's name: ");
         ballotFileName = scanner.nextLine().trim();
         validateBallotFile(ballotFileName);
 
-        if (electionType == 's') {
+        if (electionType.equals("STV")) {
             
             // prompt for auditFileName
             System.out.print("Enter a name for your audit file (without the extension): ");
@@ -65,9 +52,7 @@ public class Election {
 
         }
 
-        // prompt for number of seats
-        System.out.print("Enter number of seats: ");
-        numSeats = Integer.parseInt(scanner.nextLine().trim());
+        
     }
 
     /**
@@ -78,7 +63,8 @@ public class Election {
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
-            candidates = ballotFileReader.readCandidates(fileName);
+            Header header = ballotFileReader.readHeader(fileName);
+            setStateVariablesFromHeader(header);
             createInputObject();
             ballots = ballotFileReader.readBallots(fileName, input.getAlgorithm());
         } catch (FileNotFoundException e) {
@@ -192,13 +178,23 @@ public class Election {
      * Creates input object for election based off of selected election type.
      */
     private void createInputObject() {
-        if (electionType == 'p') {
+        if (electionType.equals("PV")) {
             input = new PluralityInput("plurality", numSeats, ballotFileName);
             votingAlgorithm = new PluralityAlgorithm(this);
-        } else {
+        } else if (electionType.equals("STV")) {
             input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
             votingAlgorithm = new STVAlgorithm(this);
         }
+    }
+
+    /**
+     * sets the Election class's state variables
+     * @param header contains election information from the ballot file's header
+     */
+    private void setStateVariablesFromHeader(Header header) {
+        electionType = header.getElectionType();
+        numSeats = header.getNumSeats();
+        candidates = header.getCandidates();
     }
 
     /**
