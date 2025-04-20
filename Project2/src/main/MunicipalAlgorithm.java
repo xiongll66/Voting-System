@@ -22,12 +22,25 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
     public List<String> sortCanList;
     private Map<String, Integer> candidateVoteMap = new HashMap<>();
 
+    /**
+     * Constructor for MvAlgorithm.
+     * 
+     * @param election the Election object that provides candidate and seat information.
+     */
     public MunicipalAlgorithm(Election election) {
         this.election = election;
         this.counterList = new int[election.getCandidates().length];
         this.sortCanList = new ArrayList<>();
     }
 
+    /**
+     * Executes the municipal voting algorithm:
+     * 1. Counts votes from ballots.
+     * 2. Determines the winners and losers.
+     * 3. Displays results.
+     *
+     * @param ballots list of ballots cast in the election.
+     */
     @Override
     public void runAlgorithm(List<Ballot> ballots) {
         MvAlgorithmFunction(ballots);
@@ -35,17 +48,19 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
         displayResults();
     }
 
+    /**
+     * Counts the number of 1s for each candidate in all ballots.
+     *
+     * @param ballots list of ballots to be processed.
+     * 
+     */
     private void MvAlgorithmFunction(List<Ballot> ballots) {
         int numCandidates = election.getCandidates().length;
         counterList = new int[numCandidates];
 
         for (Ballot ballot : ballots) {
             int[] votes = ballot.getVote();
-
-            if (votes == null || votes.length != numCandidates) {
-                throw new IllegalArgumentException("Invalid ballot format.");
-            }
-
+            //Count each candidate gets a vote for a 1
             for (int i = 0; i < votes.length; i++) {
                 if (votes[i] == 1) {
                     counterList[i]++;
@@ -56,21 +71,29 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
         }
     }
 
+    /**
+     * Calculates the winning candidates based on the number of votes and seats available.
+     * Handles ties by randomly selecting candidates from those with the same vote count at the cutoff.
+     */
     private void calculateWinner() {
         int numSeats = election.getNumSeats();
         String[] candidates = election.getCandidates();
 
+        // Pair candidate index with vote count
         List<int[]> candidateVotes = new ArrayList<>();
         for (int i = 0; i < candidates.length; i++) {
             candidateVotes.add(new int[]{i, counterList[i]});
             candidateVoteMap.put(candidates[i], counterList[i]); // Save votes for later display
         }
 
+        // Sort candidates by vote count in descending order
         candidateVotes.sort((a, b) -> Integer.compare(b[1], a[1]));
 
+        // Determine the minimum number of votes needed to win (cutoff)
         int cutoffVotes = candidateVotes.get(numSeats - 1)[1];
         List<Integer> tieIndices = new ArrayList<>();
 
+        // Identify candidates with vote counts equal to the cutoff
         for (int[] pair : candidateVotes) {
             if (pair[1] == cutoffVotes) {
                 tieIndices.add(pair[0]);
@@ -78,20 +101,23 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
         }
 
         List<Integer> winners = new ArrayList<>();
-
+        // If there are ties at the cutoff
         if (tieIndices.size() > 1) {
             List<Integer> selectedFromTies = breakTie(tieIndices);
+            // Break the tie and add selected candidates
             for (int[] pair : candidateVotes) {
                 if (pair[1] > cutoffVotes || (pair[1] == cutoffVotes && selectedFromTies.contains(pair[0]))) {
                     winners.add(pair[0]);
                 }
             }
         } else {
+            // No tie — select top N candidates as winners
             for (int i = 0; i < numSeats; i++) {
                 winners.add(candidateVotes.get(i)[0]);
             }
         }
 
+        //Put candidates into winners and losers
         for (int i = 0; i < candidates.length; i++) {
             if (winners.contains(i)) {
                 winnerList.add(candidates[i]);
@@ -100,7 +126,11 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
             }
         }
     }
- 
+
+
+    /**
+     * Displays the final election results, including vote totals for each winner and loser.
+     */
     @Override
     protected void displayResults() {
         System.out.println("=== Municipal Voting Results ===");
@@ -116,7 +146,12 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
         }
     }
  
-
+    /**
+     * Breaks a tie by randomly selecting a number of candidates equal to the number of remaining seats.
+     *
+     * @param tieList list of candidate indices tied at the cutoff vote count.
+     * @return list of selected candidate indices to break the tie.
+     */
     protected List<Integer> breakTie(List<Integer> tieList) {
     List<Integer> selected = new ArrayList<>();
     Random rand = new Random();
