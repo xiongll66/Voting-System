@@ -1,4 +1,4 @@
-package Project1.testing;
+package Project2.testing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

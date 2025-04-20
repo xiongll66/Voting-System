@@ -1,4 +1,4 @@
-package Project1.testing.plurality;
+package Project2.testing.plurality;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
