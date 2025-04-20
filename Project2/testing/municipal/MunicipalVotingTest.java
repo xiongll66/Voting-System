@@ -32,7 +32,7 @@ import main.BallotFileReader;
 public class MunicipalVotingTest {
     private Election election;
     private BallotFileReader ballotFileReader;
-    private PluralityAlgorithm PluralityAlgorithm; 
+    private MunicipalVotingTest PluralityAlgorithm; 
 
      /**
      * Sets up the test environment by initializing the Election object and

@@ -11,7 +11,7 @@
 
  import java.util.*;
  
- public class MunicialVotingAlgorithm extends VotingAlgorithm {
+ public class MunicipalAlgorithm extends VotingAlgorithm {
      /** The election object containing candidates and ballots. */
      public Election election;
      
@@ -22,7 +22,7 @@
      public List<String> sortCanList;
      private Map<String, Integer> candidateVoteMap = new HashMap<>();
  
-     public MunicialVotingAlgorithm(Election election) {
+     public MunicipalAlgorithm(Election election) {
          this.election = election;
          this.counterList = new int[election.getCandidates().length];
          this.sortCanList = new ArrayList<>();
