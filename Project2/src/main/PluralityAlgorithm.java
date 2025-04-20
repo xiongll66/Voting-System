@@ -89,7 +89,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             while (canIndexCounter < currBallotVote.length) {
                 // Check if ballot vote is either 1 or 0 
                 if (currBallotVote[canIndexCounter] != 0 && currBallotVote[canIndexCounter] != 1) {
-                    throw new IllegalArgumentException("invalid ballot format (vote is not 0 or 1).");
+                    throw new IllegalArgumentException("invalid ballot vote: " +  currBallotVote[canIndexCounter] );
                 }
                 // Found vote
                 if (currBallotVote[canIndexCounter] == 1) {

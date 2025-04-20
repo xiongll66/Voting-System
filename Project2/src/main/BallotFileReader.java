@@ -66,4 +66,9 @@ public class BallotFileReader {
         }
         return ballots;
     }
+
+    public String[] readCandidates(String fileName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readCandidates'");
+    }
 }

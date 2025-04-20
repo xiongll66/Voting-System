@@ -50,7 +50,7 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void zeroTieOneSeatThreeCan() {
-        Path csvPath = Paths.get("Project1/testing/plurality/0tie1seat.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/0tie1seat.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path

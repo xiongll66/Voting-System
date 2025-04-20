@@ -17,9 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import main.BallotFileReader;
 import main.Election;
 import main.InitialInput;
-import main.PluralityAlgorithm;
+import main.MunicipalAlgorithm;
 
-import main.BallotFileReader;
 
 /**
  * Unit tests for the Municipal voting algorithm in the Election system.
@@ -32,7 +31,7 @@ import main.BallotFileReader;
 public class MunicipalVotingTest {
     private Election election;
     private BallotFileReader ballotFileReader;
-    private MunicipalVotingTest PluralityAlgorithm; 
+    private MunicipalAlgorithm municipalAlgorithm; 
 
      /**
      * Sets up the test environment by initializing the Election object and
@@ -44,4 +43,318 @@ public class MunicipalVotingTest {
         ballotFileReader = new BallotFileReader();
     }
 
+    @Test
+    public void zeroTieOneSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/0tie1seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        List<String> expectedWinners = new ArrayList<>();
+        expectedWinners.add("A");
+        List<String> expectedLoser = new ArrayList<>();
+        expectedLoser.add("C");
+        expectedLoser.add("B");
+        assertEquals(1, municipalAlgorithm.getWinnerList().size());
+        assertTrue(expectedWinners.containsAll(municipalAlgorithm.getWinnerList()));
+        assertEquals(2, municipalAlgorithm.getLoserList().size());
+        assertTrue(municipalAlgorithm.getLoserList().containsAll(expectedLoser));
+    }
+
+    @Test
+    public void zeroTieTwoSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/0tie1seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        // assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        List<String> expectedWinners = new ArrayList<>();
+        expectedWinners.add("B");
+        expectedWinners.add("A");
+        List<String> expectedLoser = new ArrayList<>();
+        expectedLoser.add("C");
+        assertEquals(2, municipalAlgorithm.getWinnerList().size());
+        assertTrue(expectedWinners.equals(municipalAlgorithm.getWinnerList()));
+        assertEquals(1, municipalAlgorithm.getLoserList().size());
+        assertTrue(municipalAlgorithm.getLoserList().containsAll(expectedLoser));
+    }
+    
+    @Test
+    public void oneTieOneSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/1tie1seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        List<String> expectedLoser = new ArrayList<>();
+        expectedLoser.add("A");
+        expectedLoser.add("B");
+        expectedLoser.add("C");
+
+        assertEquals(1, municipalAlgorithm.getWinnerList().size());
+        assertTrue(municipalAlgorithm.getWinnerList().get(0).equals("A") || 
+        municipalAlgorithm.getWinnerList().get(0).equals("B"));
+
+
+        assertEquals(2, municipalAlgorithm.getLoserList().size());
+        assertTrue(expectedLoser.containsAll(municipalAlgorithm.getLoserList()));
+    }
+
+    @Test
+    public void oneTieTwoSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/2tie2seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(2, municipalAlgorithm.getWinnerList().size());
+        assertTrue(municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("B"));
+
+
+        assertEquals(1, municipalAlgorithm.getLoserList().size());
+        assertTrue(municipalAlgorithm.getLoserList().contains("C"));
+    }
+
+    @Test
+    public void twoTieTwoSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/2tie2seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(2, municipalAlgorithm.getWinnerList().size());
+        assertTrue(
+        (municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("B")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("B") && 
+        municipalAlgorithm.getWinnerList().contains("C")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("C") && 
+        municipalAlgorithm.getWinnerList().contains("A"))
+        );
+
+
+        assertEquals(1, municipalAlgorithm.getLoserList().size());
+        assertTrue(municipalAlgorithm.getLoserList().contains("C") ||
+        municipalAlgorithm.getLoserList().contains("A") ||
+        municipalAlgorithm.getLoserList().contains("B"));
+    }
+
+    @Test
+    public void threeTieOneSeatThreeCan() {
+        Path csvPath = Paths.get("Project2/testing/municipal/3tie1seat.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(1, municipalAlgorithm.getWinnerList().size());
+        assertTrue(
+            municipalAlgorithm.getWinnerList().contains("C") ||
+            municipalAlgorithm.getWinnerList().contains("A") ||
+            municipalAlgorithm.getLoserList().contains("B"));
+
+
+        assertEquals(2, municipalAlgorithm.getLoserList().size());
+
+        assertTrue(
+            (municipalAlgorithm.getLoserList().contains("A") && 
+            municipalAlgorithm.getLoserList().contains("B")) 
+            || 
+            (municipalAlgorithm.getLoserList().contains("B") && 
+            municipalAlgorithm.getLoserList().contains("C")) 
+            || 
+            (municipalAlgorithm.getLoserList().contains("C") && 
+            municipalAlgorithm.getLoserList().contains("A")
+            )
+        );
+    }
+
+    @Test
+    public void threeTieTwoSeatThreeCanOne() {
+        Path csvPath = Paths.get("Project2/testing/municipal/3tie2seat1.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(2, municipalAlgorithm.getWinnerList().size());
+        assertTrue(
+            (municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("B")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("B") && 
+        municipalAlgorithm.getWinnerList().contains("C")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("C") && 
+        municipalAlgorithm.getWinnerList().contains("A")));
+
+
+        assertEquals(1, municipalAlgorithm.getLoserList().size());
+
+        assertTrue(municipalAlgorithm.getLoserList().contains("C") ||
+        municipalAlgorithm.getLoserList().contains("A") ||
+        municipalAlgorithm.getLoserList().contains("B"));
+    }
+
+    @Test
+    public void threeTieTwoSeatThreeCanTwo() {
+        Path csvPath = Paths.get("Project2/testing/municipal/3tie2seat2.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // Simulate user input with the correct path
+        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        try {
+            election.promptForInput(scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        election.processBallotFile(ballotFileReader);
+        
+        InitialInput input = election.getInput();
+        assertNotNull(input, "Input object was not initialized");
+        assertEquals("municipal", input.getAlgorithm());
+
+        municipalAlgorithm = new MunicipalAlgorithm(election); 
+        municipalAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(2, municipalAlgorithm.getWinnerList().size());
+        assertTrue(
+            (municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("B")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("C")) 
+        || 
+        (municipalAlgorithm.getWinnerList().contains("A") && 
+        municipalAlgorithm.getWinnerList().contains("D"))
+        || 
+        (municipalAlgorithm.getWinnerList().contains("B") && 
+        municipalAlgorithm.getWinnerList().contains("C"))
+        || 
+        (municipalAlgorithm.getWinnerList().contains("B") && 
+        municipalAlgorithm.getWinnerList().contains("D"))
+        || 
+        (municipalAlgorithm.getWinnerList().contains("C") && 
+        municipalAlgorithm.getWinnerList().contains("D")));
+
+
+        assertEquals(2, municipalAlgorithm.getLoserList().size());
+
+        assertTrue((municipalAlgorithm.getLoserList().contains("A") && 
+        municipalAlgorithm.getLoserList().contains("B")) 
+        || 
+        (municipalAlgorithm.getLoserList().contains("A") && 
+        municipalAlgorithm.getLoserList().contains("C")) 
+        || 
+        (municipalAlgorithm.getLoserList().contains("A") && 
+        municipalAlgorithm.getLoserList().contains("D"))
+        || 
+        (municipalAlgorithm.getLoserList().contains("B") && 
+        municipalAlgorithm.getLoserList().contains("C"))
+        || 
+        (municipalAlgorithm.getLoserList().contains("B") && 
+        municipalAlgorithm.getLoserList().contains("D"))
+        || 
+        (municipalAlgorithm.getLoserList().contains("C") && 
+        municipalAlgorithm.getLoserList().contains("D")));
+    }
 }
