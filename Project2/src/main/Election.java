@@ -22,17 +22,21 @@ public class Election {
     private boolean shuffle;
 
 /**
- * Prompts user for input on election information.
+ * Prompts user for a ballot file name and parses the file's header to initialize election information variables
  * 
  * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
  * @throws Exception throws an exception if there are invalid inputs
  */
-    public void promptForInput(Scanner scanner) throws Exception {
+    public void promptForInput(Scanner scanner, BallotFileReader ballotFileReader) throws Exception {
         
         // prompt for ballotFileName
         System.out.print("Enter ballot file's name: ");
         ballotFileName = scanner.nextLine().trim();
         validateBallotFile(ballotFileName);
+
+        // parse header to set election info variables
+        Header header = ballotFileReader.readHeader(ballotFileName);
+        setStateVariablesFromHeader(header);
 
         if (electionType.equals("STV")) {
             
@@ -63,8 +67,6 @@ public class Election {
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
-            Header header = ballotFileReader.readHeader(fileName);
-            setStateVariablesFromHeader(header);
             createInputObject();
             ballots = ballotFileReader.readBallots(fileName, input.getAlgorithm());
         } catch (FileNotFoundException e) {
@@ -208,7 +210,7 @@ public class Election {
         Scanner scanner = new Scanner(System.in);
         BallotFileReader ballotFileReader = new BallotFileReader();
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return;
