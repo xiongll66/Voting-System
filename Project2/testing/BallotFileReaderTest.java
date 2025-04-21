@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
@@ -92,5 +93,17 @@ public class BallotFileReaderTest {
         assertEquals("PV", header.getElectionType());
         assertEquals(2, header.getNumSeats());
         assertArrayEquals(new String[]{"A", "B", "C", "D"}, header.getCandidates());
+    }
+
+    @Test
+    public void readHeaderInvalidTest() {
+        Path csvPath = Paths.get("Project2/testing/invalidHeader.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        BallotFileReader reader = new BallotFileReader();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            reader.readHeader(csvPath.toString());
+        });
     }
 }
