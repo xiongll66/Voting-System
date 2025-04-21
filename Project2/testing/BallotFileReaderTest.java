@@ -1,18 +1,28 @@
 package Project2.testing;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import main.BallotFileReader;
+import main.Header;
 import main.PluralityBallot;
 import main.STVBallot;
 import main.Ballot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class BallotFileReaderTest {
     private BallotFileReader ballotFileReader;
@@ -69,5 +79,18 @@ public class BallotFileReaderTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void readHeaderTest() throws Exception{
+        Path csvPath = Paths.get("Project2/testing/plurality/3tie2seat2.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        BallotFileReader reader = new BallotFileReader();
+        Header header = reader.readHeader(csvPath.toString());
+        
+        assertEquals("PV", header.getElectionType());
+        assertEquals(2, header.getNumSeats());
+        assertArrayEquals(new String[]{"A", "B", "C", "D"}, header.getCandidates());
     }
 }
