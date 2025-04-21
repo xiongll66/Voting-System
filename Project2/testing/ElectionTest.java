@@ -38,7 +38,7 @@ public class ElectionTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class ElectionTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("s\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class ElectionTest {
         // Simulate user input 't' for election type
         Scanner scanner = new Scanner("t\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
         assertThrows(Exception.class, () -> {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         });
     }
 
@@ -88,7 +88,7 @@ public class ElectionTest {
         // Simulate user inputting an empty input for election type
         Scanner scanner = new Scanner("\n" + csvPath.toString() + "\nauditFile\n1\n1\n");
         assertThrows(Exception.class, () -> {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         });
     }
 
@@ -97,7 +97,7 @@ public class ElectionTest {
         // Simulate user inputting an invalid csv file
         Scanner scanner = new Scanner("p\ninvalid.csv\nauditFile\n1\n1\n");
         assertThrows(Exception.class, () -> {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         });
     }
     

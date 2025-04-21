@@ -51,7 +51,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +83,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +115,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,7 +150,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,7 +180,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -220,7 +220,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,7 +263,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -303,7 +303,7 @@ public class MunicipalVotingTest {
         // Simulate user input with the correct path
         Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
         try {
-            election.promptForInput(scanner);
+            election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
