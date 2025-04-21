@@ -45,7 +45,10 @@ public class BallotFileReader {
     public List<Ballot> readBallots(String fileName, String algorithmType) throws FileNotFoundException {
         List<Ballot> ballots = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {
-            scanner.nextLine();
+            // skip header lines (5 lines)
+            for (int i = 0; i < 5; i++) {
+                scanner.nextLine();
+            }
             int id = 0;
             while (scanner.hasNextLine()) {
                 String[] ballotLine = scanner.nextLine().split(",", -1);
