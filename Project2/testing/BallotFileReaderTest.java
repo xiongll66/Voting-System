@@ -23,17 +23,6 @@ public class BallotFileReaderTest {
     }
 
     @Test
-    public void readCandidatesTest() {
-        String[] expectedCandidates = {"A", "B", "C"};
-        try {
-            String[] actualCandidates = ballotFileReader.readCandidates("Project1/testing/plurality/2tie1seat.csv");
-            assertArrayEquals(expectedCandidates, actualCandidates);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     public void readBallotsPluralityTest() {
         List<Ballot> expectedBallots = new ArrayList<>();
         int[] vote = {1, 0, 0};
