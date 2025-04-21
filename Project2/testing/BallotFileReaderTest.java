@@ -106,4 +106,16 @@ public class BallotFileReaderTest {
             reader.readHeader(csvPath.toString());
         });
     }
+
+    @Test
+    public void readHeaderMissingTest() {
+        Path csvPath = Paths.get("Project2/testing/missingHeader.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        BallotFileReader reader = new BallotFileReader();
+        
+        assertThrows(IllegalArgumentException.class, () -> {
+            reader.readHeader(csvPath.toString());
+        });
+    }
 }
