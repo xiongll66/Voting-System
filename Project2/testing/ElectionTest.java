@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import main.BallotFileReader;
 import main.Election;
-import main.InitialInput;
 
 /**
  * Unit tests for Election class.
@@ -60,10 +59,8 @@ public class ElectionTest {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("stv", input.getAlgorithm());
+
+        assertEquals("STV", election.getElectionType());
     }
 
     @Test
