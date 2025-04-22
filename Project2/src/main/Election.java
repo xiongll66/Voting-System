@@ -12,7 +12,6 @@ import java.util.Scanner;
 public class Election {
     private List<Ballot> ballots;
     private String[] candidates;
-    private InitialInput input;
     private VotingAlgorithm votingAlgorithm;
     private int numSeats;
 
@@ -60,15 +59,14 @@ public class Election {
     }
 
     /**
-     * Process the ballot file and calls function to create the input object.
+     * Process the ballots from the ballot file.
      * 
-     * @param ballotFileReader Object responsible for reading ballot file
+     * @param ballotFileReader Object responsible for reading ballots from the ballot file
      */
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
             String fileName = this.ballotFileName;
-            createInputObject();
-            ballots = ballotFileReader.readBallots(fileName, input.getAlgorithm());
+            ballots = ballotFileReader.readBallots(fileName, electionType);
         } catch (FileNotFoundException e) {
             System.out.println("Error processing ballot file: " + e.getMessage());
             System.exit(1);
@@ -83,12 +81,11 @@ public class Election {
     }
 
     /**
-     * Gets input for the election.
-     * 
-     * @return the initial input object that contains election setup information.
+     * Gets the election type string
+     * @return PV or STV
      */
-    public InitialInput getInput() {
-        return input;
+    public String getElectionType() {
+        return electionType;
     }
 
     /**
@@ -107,15 +104,6 @@ public class Election {
      */
     public void setCandidates(String[] candidates) {
         this.candidates = candidates;
-    }
-
-    /**
-     * Sets the initial input for the election.
-     *
-     * @param input The InitialInput object that contains configuration details for the election.
-     */
-    public void setInput(InitialInput input) {
-        this.input = input;
     }
 
     /**
@@ -143,6 +131,22 @@ public class Election {
      */
     public VotingAlgorithm getVotingAlgorithm() {
         return votingAlgorithm;
+    }
+
+    /**
+     * Gets audit file name
+     * @return String containing audit file's name
+     */
+    public String getAuditFileName() {
+        return auditFileName;
+    }
+
+    /**
+     * Gets shuffle value
+     * @return true for on, false for off
+     */
+    public boolean getShuffle() {
+        return shuffle;
     }
 
     /**
@@ -177,19 +181,6 @@ public class Election {
     }
 
     /**
-     * Creates input object for election based off of selected election type.
-     */
-    private void createInputObject() {
-        if (electionType.equals("PV")) {
-            input = new PluralityInput("plurality", numSeats, ballotFileName);
-            votingAlgorithm = new PluralityAlgorithm(this);
-        } else if (electionType.equals("STV")) {
-            input = new STVInput("stv", numSeats, ballotFileName, auditFileName, shuffle);
-            votingAlgorithm = new STVAlgorithm(this);
-        }
-    }
-
-    /**
      * sets the Election class's state variables
      * @param header contains election information from the ballot file's header
      */
@@ -197,6 +188,12 @@ public class Election {
         electionType = header.getElectionType();
         numSeats = header.getNumSeats();
         candidates = header.getCandidates();
+
+        if (electionType.equals("PV")) {
+            votingAlgorithm = new PluralityAlgorithm(this);
+        } else if (electionType.equals("STV")) {
+            votingAlgorithm = new STVAlgorithm(this);
+        }
     }
 
     /**

@@ -142,7 +142,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
             throw new IllegalArgumentException("Candidate and vote count mismatch.");
         }
     
-        if (election.getInput().getNumSeats() > sortCanList.size()) {
+        if (election.getNumSeats() > sortCanList.size()) {
             throw new IllegalArgumentException("Number of seats exceeds the number of candidates.");
         }
 
@@ -187,7 +187,7 @@ public class PluralityAlgorithm extends VotingAlgorithm{
 
         // Add everything to winner list based on seat available 
         int i;
-        for (i = 0; i < election.getInput().getNumSeats(); i++) {
+        for (i = 0; i < election.getNumSeats(); i++) {
             winnerList.add(sortCanList.get(finalSortedWinners.get(i))); 
         } // Add reminding to loser 
         for (; i < finalSortedWinners.size(); i++) {
@@ -200,8 +200,8 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      */
     protected void displayResults() {
         System.out.println("**************** Election Results ****************");
-        System.out.println("Election Type: " + election.getInput().getAlgorithm());
-        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
+        System.out.println("Election Type: " + election.getElectionType());
+        System.out.println("Number of Seats: " + election.getNumSeats());
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Number of Ballots: " + election.getBallots().size());
         System.out.println();    

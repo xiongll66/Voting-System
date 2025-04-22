@@ -78,9 +78,9 @@ public class STVAlgorithm extends VotingAlgorithm {
 
         time = 0;
         firstBallotTimes = new int[election.getCandidates().length];
-        calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
+        calculateDroopQuota(ballots.size(), election.getNumSeats());
         redistributeCandidateBallots(ballots);
-        generateAuditFile(((STVInput) election.getInput()).getAuditFileName() + ".txt");
+        generateAuditFile(election.getAuditFileName() + ".txt");
     }
 
     /**
@@ -122,7 +122,7 @@ public class STVAlgorithm extends VotingAlgorithm {
      * @param ballots The list of ballots to process
      */
     public void redistributeCandidateBallots(List<Ballot> ballots) {
-        shuffleBallots(ballots, ((STVInput) election.getInput()).getShuffle());
+        shuffleBallots(ballots, election.getShuffle());
 
         int totalCandidates = election.getCandidates().length;
     
@@ -149,7 +149,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Main election rounds loops until all seats are filled
-        while (electedList.size() < election.getInput().getNumSeats()) {
+        while (electedList.size() < election.getNumSeats()) {
             boolean electedThisRound = false;
 
             // Check for candidates meeting quota
@@ -192,7 +192,7 @@ public class STVAlgorithm extends VotingAlgorithm {
             writer.println("Date: " + new Date());
             writer.println("\nELECTION RESULTS:");
             writer.println("Type: STV");
-            writer.println("Number of seats: " + election.getInput().getNumSeats());
+            writer.println("Number of seats: " + election.getNumSeats());
             writer.println("Number of candidates: " + election.getCandidates().length);
             writer.println("Droop Quota: " + droopQuota);
             writer.println("Winners: " + winnerList);
@@ -218,7 +218,7 @@ public class STVAlgorithm extends VotingAlgorithm {
     public void displayResults() {
         System.out.println("**************** Election Results ****************");
         System.out.println("Election Type: STV");
-        System.out.println("Number of Seats: " + election.getInput().getNumSeats());
+        System.out.println("Number of Seats: " + election.getNumSeats());
         System.out.println("Number of Candidates: " + election.getCandidates().length);
         System.out.println("Winners: " + winnerList);
         System.out.println("Losers: " + loserList);
@@ -415,7 +415,7 @@ public class STVAlgorithm extends VotingAlgorithm {
         }
 
         //Open seat, select the last candidate from the nonElected list
-        if (winnerList.size() < election.getInput().getNumSeats()) {
+        if (winnerList.size() < election.getNumSeats()) {
             // Get the last candidate added to the nonElectedList
             List<Integer> nonElectedKeys = new ArrayList<>(nonElectedList.keySet());
        

@@ -44,9 +44,7 @@ public class ElectionTest {
         }
         election.processBallotFile(ballotFileReader);
         
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
+        assertEquals("PV", election.getElectionType());
     }
 
     @Test
