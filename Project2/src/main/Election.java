@@ -193,6 +193,8 @@ public class Election {
             votingAlgorithm = new PluralityAlgorithm(this);
         } else if (electionType.equals("STV")) {
             votingAlgorithm = new STVAlgorithm(this);
+        } else if (electionType.equals("MV")) {
+            votingAlgorithm = new MunicipalAlgorithm(this);
         }
     }
 

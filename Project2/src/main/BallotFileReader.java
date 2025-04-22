@@ -60,7 +60,7 @@ public class BallotFileReader {
                         vote[i] = 0;
                     }
                 }
-                if (algorithmType.equals("PV")) {
+                if (algorithmType.equals("PV") || algorithmType.equals("MV")) {
                     ballots.add(new PluralityBallot(vote));
                 } else if (algorithmType.equals("STV")) {
                     ballots.add(new STVBallot(id++, vote));
