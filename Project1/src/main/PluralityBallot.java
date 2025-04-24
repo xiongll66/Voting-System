@@ -1,5 +1,7 @@
 package main;
 
+import p2main.Ballot;
+
 /**
  * Class that extends Ballot to represent a Plurality Ballot.
  */

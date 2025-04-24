@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
 
+import p2main.Ballot;
+import p2main.Election;
+import p2main.VotingAlgorithm;
+
 /**
  * Implements the Plurality voting algorithm.
  * This voting system assigns votes based on the first-choice candidate

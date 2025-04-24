@@ -1,6 +1,8 @@
-package main;
+package p2main;
 
 import java.util.Arrays;
+
+import p2main.Ballot;
 
 /**
  * Abstract class representing Ballot for election. 

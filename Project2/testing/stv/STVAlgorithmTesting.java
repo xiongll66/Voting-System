@@ -5,9 +5,16 @@ package Project2.testing.stv;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import main.Ballot;
+import main.Election;
+import main.STVAlgorithm;
+import main.STVBallot;
+import main.STVInput;
+import p2main.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import main.*;
 
 public class STVAlgorithmTesting {
     private STVAlgorithm stvAlgorithm;

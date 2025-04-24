@@ -13,9 +13,9 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import main.BallotFileReader;
-import main.Election;
 import main.InitialInput;
+import p2main.BallotFileReader;
+import p2main.Election;
 
 /**
  * Unit tests for Election class.

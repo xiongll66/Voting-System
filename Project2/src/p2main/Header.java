@@ -1,4 +1,4 @@
-package main;
+package p2main;
 
 public class Header {
     private String electionType;

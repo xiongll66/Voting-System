@@ -13,13 +13,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 
-import main.BallotFileReader;
-import main.Header;
-import main.PluralityBallot;
-import main.STVBallot;
-import main.Ballot;
+import p2main.Ballot;
+import p2main.BallotFileReader;
+import p2main.Header;
+import p2main.PluralityBallot;
+import p2main.STVBallot;
+
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,9 +7,13 @@
  * Author: Ly Xiong
  */
 
-package main;
+package p2main;
 
 import java.util.*;
+
+import p2main.Ballot;
+import p2main.Election;
+import p2main.VotingAlgorithm;
 
 public class MunicipalAlgorithm extends VotingAlgorithm {
     /** The election object containing candidates and ballots. */
