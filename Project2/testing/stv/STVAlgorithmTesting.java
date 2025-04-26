@@ -6,34 +6,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import main.Ballot;
-import main.Election;
-import main.STVAlgorithm;
-import main.STVBallot;
-import main.STVInput;
+import Project1.src.main.STVInput;
 import p2main.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class STVAlgorithmTesting {
     private STVAlgorithm stvAlgorithm;
     private Election election;
-    private List<Ballot> ballots;
+    private BallotFileReader ballotFileReader;
+
 
     @BeforeEach
     void setUp() {
         election = new Election();
-        // Initialize with test data
-        election.setCandidates(new String[]{"A", "B", "C"});
-        election.setInput(new STVInput("s", 1, "elimination.csv", "audit", false));
-        stvAlgorithm = new STVAlgorithm(election);
-        stvAlgorithm.counterList = (List<Ballot>[]) new ArrayList[election.getCandidates().length];
-        for (int i = 0; i < stvAlgorithm.counterList.length; i++) {
-            stvAlgorithm.counterList[i] = new ArrayList<>();  // Initializes each list in the array to hold STVBallot
-        }
-        stvAlgorithm.firstBallotTimes = new int[election.getCandidates().length];
-        ballots = new ArrayList<>();
+        ballotFileReader = new BallotFileReader();
     }
 
     @Test
@@ -44,7 +36,7 @@ public class STVAlgorithmTesting {
         
         
         // Test edge case with minimal ballots
-        stvAlgorithm.calculateDroopQuota(3,  ((STVInput) election.getInput()).getNumSeats());
+        stvAlgorithm.calculateDroopQuota(3,  1);
         assertEquals(2, stvAlgorithm.droopQuota); // 3/(1+1) + 1 = 2
     }
 
@@ -58,7 +50,7 @@ public class STVAlgorithmTesting {
         List<Ballot> original = new ArrayList<>(testBallots);
 
         // Shuffle off - should remain same
-        stvAlgorithm.shuffleBallots(testBallots, ((STVInput) election.getInput()).getShuffle());
+        stvAlgorithm.shuffleBallots(testBallots, false);
         assertIterableEquals(original, testBallots);
 
         // Shuffle on - should be different
@@ -68,13 +60,13 @@ public class STVAlgorithmTesting {
 
     @Test
     void testRedistributeCandidateBallots() {
+        List<Ballot> ballots = new ArrayList<>();
         // Create test ballots (5 ballots, 3 candidates)
         ballots.add(new STVBallot(1, new int[]{1, 2, 3})); // A first
         ballots.add(new STVBallot(2, new int[]{1, 2, 3})); // A first
-        ballots.add(new STVBallot(3, new int[]{3, 1, 2})); // B first 
+        ballots.add(new STVBallot(3, new int[]{1, 3, 2})); // B first 
         ballots.add(new STVBallot(4, new int[]{3, 1, 2})); // B first
         ballots.add(new STVBallot(5, new int[]{2, 3, 1})); // C first
-        stvAlgorithm.calculateDroopQuota(ballots.size(), election.getInput().getNumSeats());
         stvAlgorithm.redistributeCandidateBallots(ballots);
 
         // Verify results (quota = 3 votes needed to win)
@@ -82,7 +74,64 @@ public class STVAlgorithmTesting {
         assertEquals("A", stvAlgorithm.winnerList.get(0)); // A wins with 3 votes
         
         assertEquals(2, stvAlgorithm.loserList.size()); // two losers
+        assertEquals("B", stvAlgorithm.loserList.get(0)); // B eliminated first
+        assertEquals("C", stvAlgorithm.loserList.get(1)); // C eliminated second
+    }
+
+    @Test
+    public void elimination() {
+        Path csvPath = Paths.get("Project2/testing/municipal/elimination.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // get user input with the correct path
+        Scanner scanner = new Scanner(csvPath.toString());
+        try {
+            election.promptForInput(scanner, ballotFileReader);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return;
+        }
+
+        election.processBallotFile(ballotFileReader);
+
+        stvAlgorithm = new STVAlgorithm(election); 
+        stvAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(1, stvAlgorithm.winnerList.size()); // should have 1 winner 
+        assertEquals("A", stvAlgorithm.winnerList.get(0)); // winner shouold be A
+
+        assertEquals(2, stvAlgorithm.loserList.size()); // two losers
         assertEquals("C", stvAlgorithm.loserList.get(0)); // C eliminated first
         assertEquals("B", stvAlgorithm.loserList.get(1));
+
     }
+
+    @Test
+    public void eliminationTie() {
+        Path csvPath = Paths.get("Project2/testing/municipal/eliminationTie.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // get user input with the correct path
+        Scanner scanner = new Scanner(csvPath.toString());
+        try {
+            election.promptForInput(scanner, ballotFileReader);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return;
+        }
+
+        election.processBallotFile(ballotFileReader);
+
+        stvAlgorithm = new STVAlgorithm(election); 
+        stvAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(1, stvAlgorithm.winnerList.size()); // should have 1 winner 
+        assertEquals("A", stvAlgorithm.winnerList.get(0)); // winner shouold be A
+
+        assertEquals(2, stvAlgorithm.loserList.size()); // two losers
+        assertEquals("C", stvAlgorithm.loserList.get(0)); // C eliminated first
+
+    }
+    
+
 }
