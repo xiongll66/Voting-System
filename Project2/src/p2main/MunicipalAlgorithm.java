@@ -1,16 +1,16 @@
 /**
  * MvAlgorithm.java
  * 
- * This class implements the  municipal voting algorithm.
+ * This class implements the  municipal voting algorithm that allow voter to vote for multiple candidates
  * It counts votes from ballots, determines winners and losers, and handles ties.
  *
  * Author: Ly Xiong
  */
 
-package p2main;
+ package p2main;
 
-import java.util.*;
-
+ import java.util.*;
+ 
 public class MunicipalAlgorithm extends VotingAlgorithm {
     /** The election object containing candidates and ballots. */
     public Election election;
@@ -148,21 +148,18 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
      * @return list of selected candidate indices to break the tie.
      */
     protected List<Integer> breakTie(List<Integer> tieList) {
-    List<Integer> selected = new ArrayList<>();
-    Random rand = new Random();
 
-    // Number of seats left to be filled
-    int seatsLeft = election.getNumSeats() - selected.size();
-
-    // Randomly select candidates from the tie list
-    while (selected.size() < seatsLeft && !tieList.isEmpty()) {
-        int chosenIdx = rand.nextInt(tieList.size());
-        selected.add(tieList.get(chosenIdx));
-        tieList.remove(chosenIdx);  // Remove the selected candidate
-    }
-
-    return selected;        
+        Random random = new Random();
+        // Store winners in order from first winner to last winner 
+        List<Integer> selected = new ArrayList<>(); 
+        // Randomly select candidates until all are ordered
+        while (!tieList.isEmpty()) {
+            int randomIndex = random.nextInt(tieList.size()); // Pick a random index
+            int candidateIndex = tieList.remove(randomIndex); // Remove from tieList
+            selected.add(candidateIndex); // Store in ordered list
+        }
         
+        return selected; 
     }
      /**
      * Retrieves the list of winners from the election.
