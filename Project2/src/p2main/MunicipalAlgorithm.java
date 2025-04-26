@@ -11,10 +11,6 @@ package p2main;
 
 import java.util.*;
 
-import p2main.Ballot;
-import p2main.Election;
-import p2main.VotingAlgorithm;
-
 public class MunicipalAlgorithm extends VotingAlgorithm {
     /** The election object containing candidates and ballots. */
     public Election election;
@@ -76,57 +72,52 @@ public class MunicipalAlgorithm extends VotingAlgorithm {
     }
 
     /**
-     * Calculates the winning candidates based on the number of votes and seats available.
-     * Handles ties by randomly selecting candidates from those with the same vote count at the cutoff.
+     * Calculates the winning candidates based on the number of votes and seats available
+     * Handles ties by calling breakTie() to randomize within tied groups
      */
     private void calculateWinner() {
         int numSeats = election.getNumSeats();
         String[] candidates = election.getCandidates();
-
-        // Pair candidate index with vote count
-        List<int[]> candidateVotes = new ArrayList<>();
+        
+        // Create a list of (candidate index, vote count) pairs
+        List<int[]> candidateVotePairs = new ArrayList<>();
         for (int i = 0; i < candidates.length; i++) {
-            candidateVotes.add(new int[]{i, counterList[i]});
+            candidateVotePairs.add(new int[]{i, counterList[i]});
             candidateVoteMap.put(candidates[i], counterList[i]); // Save votes for later display
         }
 
-        // Sort candidates by vote count in descending order
-        candidateVotes.sort((a, b) -> Integer.compare(b[1], a[1]));
+        // Sort candidates by vote count descending
+        candidateVotePairs.sort((a, b) -> Integer.compare(b[1], a[1]));
 
-        // Determine the minimum number of votes needed to win (cutoff)
-        int cutoffVotes = candidateVotes.get(numSeats - 1)[1];
-        List<Integer> tieIndices = new ArrayList<>();
+        List<int[]> finalSortedCandidates = new ArrayList<>();
+        int i = 0;
 
-        // Identify candidates with vote counts equal to the cutoff
-        for (int[] pair : candidateVotes) {
-            if (pair[1] == cutoffVotes) {
-                tieIndices.add(pair[0]);
+        while (i < candidateVotePairs.size()) {
+            int currentVote = candidateVotePairs.get(i)[1];
+            List<Integer> tieGroupIndices = new ArrayList<>();
+
+            // Collect all candidates with the same vote count
+            while (i < candidateVotePairs.size() && candidateVotePairs.get(i)[1] == currentVote) {
+                tieGroupIndices.add(candidateVotePairs.get(i)[0]);
+                i++;
+            }
+
+            // Break the tie using breakTie() to randomize
+            List<Integer> orderedTieGroup = breakTie(tieGroupIndices);
+
+            // Add candidates back into final list based on the random tie order
+            for (Integer candidateIndex : orderedTieGroup) {
+                finalSortedCandidates.add(new int[]{candidateIndex, currentVote});
             }
         }
 
-        List<Integer> winners = new ArrayList<>();
-        // If there are ties at the cutoff
-        if (tieIndices.size() > 1) {
-            List<Integer> selectedFromTies = breakTie(tieIndices);
-            // Break the tie and add selected candidates
-            for (int[] pair : candidateVotes) {
-                if (pair[1] > cutoffVotes || (pair[1] == cutoffVotes && selectedFromTies.contains(pair[0]))) {
-                    winners.add(pair[0]);
-                }
-            }
-        } else {
-            // No tie — select top N candidates as winners
-            for (int i = 0; i < numSeats; i++) {
-                winners.add(candidateVotes.get(i)[0]);
-            }
-        }
-
-        //Put candidates into winners and losers
-        for (int i = 0; i < candidates.length; i++) {
-            if (winners.contains(i)) {
-                winnerList.add(candidates[i]);
+        // Pick winners and losers
+        for (int j = 0; j < candidates.length; j++) {
+            int candidateIndex = finalSortedCandidates.get(j)[0];
+            if (j < numSeats) {
+                winnerList.add(candidates[candidateIndex]);
             } else {
-                loserList.add(candidates[i]);
+                loserList.add(candidates[candidateIndex]);
             }
         }
     }
