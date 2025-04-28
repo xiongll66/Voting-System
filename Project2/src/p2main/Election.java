@@ -14,13 +14,13 @@ import p2main.Election;
  * processes the ballot file, and invokes the appropriate voting algorithm.
  */
 public class Election {
-    private List<Ballot> ballots;
+    private List<Ballot> ballots = new ArrayList<>();
     private String[] candidates;
     private VotingAlgorithm votingAlgorithm;
     private int numSeats;
 
     private String electionType;
-    private ArrayList<String> ballotFileNames;
+    private ArrayList<String> ballotFileNames = new ArrayList<>();;
     private String auditFileName;
     private boolean shuffle;
 
@@ -34,7 +34,7 @@ public class Election {
         // prompt for ballot file names
         String ballotFileName = "";
         while (true) {
-            System.out.print("Enter ballot file's name or 'q' once all files have been entered");
+            System.out.print("Enter ballot file's name or 'q' once all files have been entered: ");
             ballotFileName = scanner.nextLine().trim();
             if (ballotFileName.equals("q")) {
                 break;
