@@ -15,10 +15,10 @@ package main;
 import java.io.*;
 import java.util.*;
 
-import p2main.Ballot;
-import p2main.Election;
-import p2main.STVBallot;
-import p2main.VotingAlgorithm;
+import main.Ballot;
+import main.Election;
+import main.STVBallot;
+import main.VotingAlgorithm;
 
 
 

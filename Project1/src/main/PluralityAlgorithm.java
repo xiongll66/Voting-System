@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
 
-import p2main.Ballot;
-import p2main.Election;
-import p2main.VotingAlgorithm;
+import main.Ballot;
+import main.Election;
+import main.VotingAlgorithm;
 
 /**
  * Implements the Plurality voting algorithm.

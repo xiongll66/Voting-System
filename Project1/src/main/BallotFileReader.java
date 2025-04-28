@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import p2main.Ballot;
-import p2main.PluralityBallot;
-import p2main.STVBallot;
+import main.Ballot;
+import main.PluralityBallot;
+import main.STVBallot;
 
 /**
  * Class for reading and processing ballot data from ballot file.
