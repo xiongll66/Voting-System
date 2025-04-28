@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 import p2main.Election;
 
@@ -66,17 +67,17 @@ public class Election {
     }
 
     /**
-     * Process the ballots from the ballot file.
+     * Process the ballots from the ballot files.
      * 
      * @param ballotFileReader Object responsible for reading ballots from the ballot file
      */
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
-            String fileName = this.ballotFileName;
-            ballots = ballotFileReader.readBallots(fileName, electionType);
-        } catch (FileNotFoundException e) {
-            System.out.println("Error processing ballot file: " + e.getMessage());
-            System.exit(1);
+        for (int i = 0; i < ballotFileNames.size(); i++) {
+            List<Ballot> newBallots = ballotFileReader.readBallots(ballotFileNames.get(i), electionType);
+            ballots = Stream.concat(ballots.stream(), newBallots.stream()).toList();}} catch (FileNotFoundException e) {
+        System.out.println("Error processing ballot file: " + e.getMessage());
+        System.exit(1);
         }
     }
 
