@@ -2,6 +2,7 @@ package p2main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class Election {
     private int numSeats;
 
     private String electionType;
-    private String ballotFileName;
+    private ArrayList<String> ballotFileNames;
     private String auditFileName;
     private boolean shuffle;
 
@@ -29,14 +30,20 @@ public class Election {
  * @throws Exception throws an exception if there are invalid inputs
  */
     public void promptForInput(Scanner scanner, BallotFileReader ballotFileReader) throws Exception {
+        // prompt for ballot file names
+        String ballotFileName = "";
+        while (true) {
+            System.out.print("Enter ballot file's name or 'q' once all files have been entered");
+            ballotFileName = scanner.nextLine().trim();
+            if (ballotFileName.equals("q")) {
+                break;
+            }
+            validateBallotFile(ballotFileName);
+            ballotFileNames.add(ballotFileName);
+        }
         
-        // prompt for ballotFileName
-        System.out.print("Enter ballot file's name: ");
-        ballotFileName = scanner.nextLine().trim();
-        validateBallotFile(ballotFileName);
-
-        // parse header to set election info variables
-        Header header = ballotFileReader.readHeader(ballotFileName);
+        // parse first ballot file's header to set election info variables
+        Header header = ballotFileReader.readHeader(ballotFileNames.get(0));
         setStateVariablesFromHeader(header);
 
         if (electionType.equals("STV")) {
@@ -56,8 +63,6 @@ public class Election {
             shuffle = parseShuffle(shuffleInput);
 
         }
-
-        
     }
 
     /**
