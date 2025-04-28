@@ -14,7 +14,7 @@ import p2main.Election;
  * processes the ballot file, and invokes the appropriate voting algorithm.
  */
 public class Election {
-    private List<Ballot> ballots = new ArrayList<>();
+    private ArrayList<Ballot> ballots = new ArrayList<>();
     private String[] candidates;
     private VotingAlgorithm votingAlgorithm;
     private int numSeats;
@@ -73,11 +73,14 @@ public class Election {
      */
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
-        for (int i = 0; i < ballotFileNames.size(); i++) {
-            List<Ballot> newBallots = ballotFileReader.readBallots(ballotFileNames.get(i), electionType);
-            ballots = Stream.concat(ballots.stream(), newBallots.stream()).toList();}} catch (FileNotFoundException e) {
-        System.out.println("Error processing ballot file: " + e.getMessage());
-        System.exit(1);
+            for (int i = 0; i < ballotFileNames.size(); i++) {
+                List<Ballot> newBallots = ballotFileReader.readBallots(ballotFileNames.get(i), electionType, ballots.size());
+                ballots.addAll(newBallots);
+            }
+        } 
+        catch (FileNotFoundException e) {
+            System.out.println("Error processing ballot file: " + e.getMessage());
+            System.exit(1);
         }
     }
 
