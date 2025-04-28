@@ -69,7 +69,7 @@ public class Election {
     /**
      * Process the ballots from the ballot files.
      * 
-     * @param ballotFileReader Object responsible for reading ballots from the ballot file
+     * @param ballotFileReader Object responsible for reading ballots from the ballot files
      */
     public void processBallotFile(BallotFileReader ballotFileReader) {
         try {
