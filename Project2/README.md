@@ -1,9 +1,9 @@
 # How to compile and run
 navigate to `Project2/`
 
-compile: `javac -d bin/ src/main/*.java`
+compile: `javac -d bin/ src/p2main/*.java`
 
-run: `java -cp bin/ main.Election`
+run: `java -cp bin/ p2main.Election`
 
 # How to correctly input ballot file names
 Ballot file names should be relative to the `Project2/` directory. For example, a valid input would be `testing/stv/elimination.csv`.
