@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
 
-import p2main.Ballot;
-import p2main.Election;
-import p2main.VotingAlgorithm;
-
 /**
  * Implements the Plurality voting algorithm.
  * This voting system assigns votes based on the first-choice candidate
@@ -49,8 +45,17 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      * @throws IllegalArgumentException if the election object or candidate list is null or empty.
      */
     public PluralityAlgorithm(Election election) {
-        if (election == null || election.getCandidates() == null || election.getCandidates().length == 0) {
-            throw new IllegalArgumentException("Election or candidate list cannot be null or empty.");
+        // if (election == null || election.getCandidates() == null || election.getCandidates().length == 0) {
+        //     throw new IllegalArgumentException("Election or candidate list cannot be null or empty.");
+        // }
+        if (election == null) {
+            throw new IllegalArgumentException("election is null");
+        }
+        if (election.getCandidates() == null) {
+            throw new IllegalArgumentException("candidate is list is null");
+        }
+        if (election.getCandidates().length == 0) {
+            throw new IllegalArgumentException("candidates list is empty");
         }
         
         this.election = election; 
@@ -70,8 +75,11 @@ public class PluralityAlgorithm extends VotingAlgorithm{
      */
     private void pluralityAlgorithmFunction(List<Ballot> ballots) {
         // Check if there is ballots 
-        if (election.getBallots().isEmpty() || election.getBallots() == null) {
-            throw new IllegalArgumentException("Ballot from Election cannot be null or empty.");
+        if (election.getBallots() == null) {
+            throw new IllegalArgumentException("Ballot from Election cannot be null.");
+        }
+        if (election.getBallots().isEmpty()) {
+            throw new IllegalArgumentException("Ballot from Election cannot be empty.");
         }
        
         for (int i = 0; i < ballots.size(); i++) {

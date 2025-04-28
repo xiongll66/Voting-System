@@ -2,9 +2,6 @@ package p2main;
 import java.util.ArrayList;
 import java.util.List;
 
-import p2main.Ballot;
-import p2main.Election;
-
 /**
  * Abstract class representing a voting algorithm.
  * This class defines the structure for any voting algorithm,
