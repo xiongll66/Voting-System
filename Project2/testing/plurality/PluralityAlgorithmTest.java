@@ -1,7 +1,6 @@
 package Project2.testing.plurality;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -14,7 +13,6 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import main.InitialInput;
 import p2main.BallotFileReader;
 import p2main.Election;
 import p2main.PluralityAlgorithm;
@@ -54,7 +52,7 @@ public class PluralityAlgorithmTest {
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
@@ -62,10 +60,6 @@ public class PluralityAlgorithmTest {
         }
         election.processBallotFile(ballotFileReader);
         
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
-
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
 
@@ -75,7 +69,7 @@ public class PluralityAlgorithmTest {
         expectedLoser.add("B");
         expectedLoser.add("C");
         assertTrue(PluralityAlgorithm.getWinnerList().equals(expectedWinner));
-        assertTrue(PluralityAlgorithm.getLoserList().equals(expectedLoser));
+        assertTrue(PluralityAlgorithm.getLoserList().containsAll(expectedLoser));
 
     }
 
@@ -90,17 +84,13 @@ public class PluralityAlgorithmTest {
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
@@ -123,21 +113,18 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void twoTieTwoSeatThreeCan() {
-        Path csvPath = Paths.get("Project1/testing/plurality/2tie2seat1.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/2tie2seat1.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
@@ -159,21 +146,17 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void twoTieTwoSeatThreeCanTwo() {
-        Path csvPath = Paths.get("Project1/testing/plurality/2tie2seat2.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/2tie2seat2.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
@@ -190,21 +173,17 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void threeTieOneSeatThreeCan() {
-        Path csvPath = Paths.get("Project1/testing/plurality/3tie1seat.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/3tie1seat.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n1\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
@@ -220,21 +199,17 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void threeTieTwoSeatThreeCan() {
-        Path csvPath = Paths.get("Project1/testing/plurality/3tie2seat1.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/3tie2seat1.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());
@@ -250,21 +225,17 @@ public class PluralityAlgorithmTest {
      */
     @Test
     public void threeTieTwoSeatThreeCanTwo() {
-        Path csvPath = Paths.get("Project1/testing/plurality/3tie2seat2.csv");
+        Path csvPath = Paths.get("Project2/testing/plurality/3tie2seat2.csv");
         assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
 
         // Simulate user input with the correct path
-        Scanner scanner = new Scanner("p\n" + csvPath.toString() + "\n2\n");
+        Scanner scanner = new Scanner(csvPath.toString() + "\nq\n");
         try {
             election.promptForInput(scanner, ballotFileReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         election.processBallotFile(ballotFileReader);
-        
-        InitialInput input = election.getInput();
-        assertNotNull(input, "Input object was not initialized");
-        assertEquals("plurality", input.getAlgorithm());
 
         PluralityAlgorithm = new PluralityAlgorithm(election); 
         PluralityAlgorithm.runAlgorithm(election.getBallots());

@@ -1,7 +1,6 @@
 package Project2.testing.municipal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -14,7 +13,6 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import main.InitialInput;
 import p2main.BallotFileReader;
 import p2main.Election;
 import p2main.MunicipalAlgorithm;
