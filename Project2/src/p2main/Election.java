@@ -5,12 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
-import p2main.Ballot;
-import p2main.BallotFileReader;
 import p2main.Election;
-import p2main.PluralityAlgorithm;
-import p2main.STVAlgorithm;
-import p2main.VotingAlgorithm;
 
 /**
  * Election is the main driver class of the voting system. It prompts the user for election information,
