@@ -1,6 +1,6 @@
 package main;
 
-import p2main.Ballot;
+import main.Ballot;
 
 /**
  * Class extending Ballot that represents an stv election ballot.

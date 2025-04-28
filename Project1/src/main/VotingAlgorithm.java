@@ -2,8 +2,8 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
-import p2main.Ballot;
-import p2main.Election;
+import main.Ballot;
+import main.Election;
 
 /**
  * Abstract class representing a voting algorithm.
