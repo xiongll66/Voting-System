@@ -44,7 +44,7 @@ public class Election {
         }
         */
 
-        // Open file chooser dialog
+         // Open file chooser dialog
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select one or more ballot files");
         fileChooser.setMultiSelectionEnabled(true);
@@ -53,18 +53,32 @@ public class Election {
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File[] selectedFiles = fileChooser.getSelectedFiles();
+
+            // Check if no files were selected
             if (selectedFiles.length == 0) {
                 throw new Exception("No ballot files selected.");
             }
+
+            // Validate selected files
             for (File file : selectedFiles) {
                 if (!file.getName().endsWith(".csv")) {
-                    throw new Exception("Invalid ballot file: " + file.getName());
+                    throw new Exception("Invalid ballot file: " + file.getName() + " (must be a .csv file).");
+                }
+                if (file.length() == 0) {
+                    throw new Exception("Empty ballot file: " + file.getName() + " (file is empty).");
                 }
                 ballotFileNames.add(file.getAbsolutePath());
+            }
+
+            // Output the selected files
+            System.out.println("You selected the following ballot files:");
+            for (File file : selectedFiles) {
+                System.out.println(" - " + file.getAbsolutePath());
             }
         } else {
             throw new Exception("Ballot file selection was cancelled.");
         }
+        
         
         // parse first ballot file's header to set election info variables
         Header header = ballotFileReader.readHeader(ballotFileNames.get(0));
