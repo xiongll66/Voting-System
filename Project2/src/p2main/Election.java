@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import p2main.Election;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Election is the main driver class of the voting system. It prompts the user for election information,
@@ -31,6 +31,7 @@ public class Election {
  */
     public void promptForInput(Scanner scanner, BallotFileReader ballotFileReader) throws Exception {
         // prompt for ballot file names
+        /* 
         String ballotFileName = "";
         while (true) {
             System.out.print("Enter ballot file's name or 'q' once all files have been entered: ");
@@ -40,6 +41,29 @@ public class Election {
             }
             validateBallotFile(ballotFileName);
             ballotFileNames.add(ballotFileName);
+        }
+        */
+
+        // Open file chooser dialog
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select one or more ballot files");
+        fileChooser.setMultiSelectionEnabled(true);
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV files", "csv"));
+
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File[] selectedFiles = fileChooser.getSelectedFiles();
+            if (selectedFiles.length == 0) {
+                throw new Exception("No ballot files selected.");
+            }
+            for (File file : selectedFiles) {
+                if (!file.getName().endsWith(".csv")) {
+                    throw new Exception("Invalid ballot file: " + file.getName());
+                }
+                ballotFileNames.add(file.getAbsolutePath());
+            }
+        } else {
+            throw new Exception("Ballot file selection was cancelled.");
         }
         
         // parse first ballot file's header to set election info variables
