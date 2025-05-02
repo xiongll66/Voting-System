@@ -26,6 +26,7 @@ public class STVAlgorithmTesting {
     void setUp() {
         election = new Election();
         ballotFileReader = new BallotFileReader();
+        stvAlgorithm = null;
     }
 
     @Test
@@ -132,6 +133,57 @@ public class STVAlgorithmTesting {
         assertEquals("C", stvAlgorithm.loserList.get(0)); // C eliminated first
 
     }
-    
+
+    @Test
+    public void quotaMet() {
+        Path csvPath = Paths.get("Project2/testing/municipal/quotaMet.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // get user input with the correct path
+        Scanner scanner = new Scanner(csvPath.toString());
+        try {
+            election.promptForInput(scanner, ballotFileReader);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return;
+        }
+
+        election.processBallotFile(ballotFileReader);
+
+        stvAlgorithm = new STVAlgorithm(election); 
+        stvAlgorithm.runAlgorithm(election.getBallots());
+        
+        assertEquals(1, stvAlgorithm.winnerList.size()); // should have 1 winner 
+        assertEquals("A", stvAlgorithm.winnerList.get(0)); // A met quota become winner 
+
+    }
+
+    @Test
+    public void redistribute() {
+        Path csvPath = Paths.get("Project2/testing/municipal/redistribute.csv");
+        assertTrue(Files.exists(csvPath), "File not found: " + csvPath);
+
+        // get user input with the correct path
+        Scanner scanner = new Scanner(csvPath.toString());
+        try {
+            election.promptForInput(scanner, ballotFileReader);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return;
+        }
+
+        election.processBallotFile(ballotFileReader);
+
+        stvAlgorithm = new STVAlgorithm(election); 
+        stvAlgorithm.runAlgorithm(election.getBallots());
+
+        assertEquals(1, stvAlgorithm.winnerList.size()); // should have 1 winner 
+        assertEquals("A", stvAlgorithm.winnerList.get(0)); // A, first winner 
+        assertEquals("B", stvAlgorithm.winnerList.get(1)); // B, second winner
+
+        assertEquals(1, stvAlgorithm.loserList.size()); // one losers
+        assertEquals("C", stvAlgorithm.loserList.get(0)); // C eliminated first
+
+    }   
 
 }
