@@ -22,12 +22,19 @@ public class Election {
     private String auditFileName;
     private boolean shuffle;
 
-/**
- * Prompts user for a ballot file name and parses the file's header to initialize election information variables
- * 
- * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
- * @throws Exception throws an exception if there are invalid inputs
- */
+    /**
+     * Default constructor for Election.
+     */
+    public Election() {
+    }
+
+    /**
+     * Prompts user for a ballot file name and parses the file's header to initialize election information variables
+     * 
+     * @param scanner scanner object used to read user input to store election type, ballot file name, and number of seats
+     * @param ballotFileReader ballot file reader object used to read ballot files
+     * @throws Exception throws an exception if there are invalid inputs
+     */
     public void promptForInput(Scanner scanner, BallotFileReader ballotFileReader) throws Exception {
         // prompt for ballot file names
         /* 

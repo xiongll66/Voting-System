@@ -12,10 +12,16 @@ import java.util.Scanner;
 public class BallotFileReader {
 
     /**
+     * Default constructor for BallotFileReader.
+     */
+    public BallotFileReader() {
+    }
+
+    /**
      * Reads the header of the ballot file
      * @param fileName the name of the ballot file
      * @return Header object containing election information
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException If given file cannot be found
      */
     public Header readHeader(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
@@ -39,6 +45,7 @@ public class BallotFileReader {
      * 
      * @param fileName The name of the ballot file to read ballots from
      * @param algorithmType The algorithm type for the election (plurality or stv)
+     * @param sizeOfBallots The size of the current number of ballots used for tracking id for STV ballots
      * @return A list of Ballot objects
      * @throws FileNotFoundException If given file cannot be found
      */

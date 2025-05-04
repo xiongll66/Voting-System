@@ -7,10 +7,16 @@
  * Author: Ly Xiong
  */
 
- package p2main;
+package p2main;
 
- import java.util.*;
+import java.util.*;
  
+/**
+ * Implements the Municipal voting algorithm.
+ * This voting system assigns votes to each candidate the voter picks.
+ * The candidate with the most votes wins.
+ * If a tie occurs, a random tie-breaking mechanism is used.
+ */
 public class MunicipalAlgorithm extends VotingAlgorithm {
     /** The election object containing candidates and ballots. */
     public Election election;
