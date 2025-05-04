@@ -82,8 +82,22 @@ public class Election {
         
         
         // parse first ballot file's header to set election info variables
-        Header header = ballotFileReader.readHeader(ballotFileNames.get(0));
-        setStateVariablesFromHeader(header);
+        Header firstHeader = ballotFileReader.readHeader(ballotFileNames.get(0));
+        setStateVariablesFromHeader(firstHeader);
+
+        // Ensure the rest of the ballot files headers are consistent with the first
+        for (int i = 1; i < ballotFileNames.size(); i++) {
+            Header otherHeader = ballotFileReader.readHeader(ballotFileNames.get(i));
+
+            if (!firstHeader.getElectionType().equals(otherHeader.getElectionType()) ||
+                firstHeader.getNumSeats() != otherHeader.getNumSeats() ||
+                !areCandidateListsEqual(firstHeader.getCandidates(), otherHeader.getCandidates())) {
+
+                System.out.println("Error: Ballot file headers do not match.");
+                System.out.println("File: " + ballotFileNames.get(i));
+                System.exit(1);
+            }
+        }
 
         if (electionType.equals("STV")) {
             
@@ -102,6 +116,25 @@ public class Election {
             shuffle = parseShuffle(shuffleInput);
 
         }
+    }
+
+    /**
+     * Compares two arrays of candidate names for equality.
+     *
+     * @param a First candidate list
+     * @param b Second candidate list
+     * @return true if lists are equal, false otherwise
+     */
+    private boolean areCandidateListsEqual(String[] a, String[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
+        for (int i = 0; i < a.length; i++) {
+            if (!a[i].trim().equals(b[i].trim())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
