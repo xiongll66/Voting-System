@@ -10,11 +10,8 @@ Ballot file names should be relative to the `Project2/` directory. For example, 
 
 
 # User Input Required at Runtime
-When run the program, user will be prompted to provide input depending on the type of perfer algorithm.
+When running the program, a file selection pop up will appear for the user to choose ballot file(s).
 
-1. Ballot file
-- Enter ballot file's name: 
-
-### Addition input if STV algorithm:
+### Additional input if STV ballot file(s) are chosen:
 - Enter a file name for generate an audit file:
 - Choose whether to shuffle ballots before processing: 1 - true to shuffle, 0 - false to shuffle
