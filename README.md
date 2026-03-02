@@ -31,9 +31,9 @@ The Voting System supports:
   - Activity Diagram for Plurality election workflow
 
 ### Instructions to Run
-1. Place the CSV input files in `Project1-Waterfall/SDD` or the project’s input folder.  
-2. Run information can be found in readme for project 1. 
-3. Verify results against specifications in the SDD.
+1. Run information can be found in readme for project 1.
+2. Select CSV input files in `Project1/testing` for each voting system.
+3. Review the output for results.
 
 ---
 
@@ -57,8 +57,8 @@ Enhancements include:
 - **Sprint Backlogs:** `/Project2/sprint_backlogs/`  
 
 ### Running the Voting System
-1. Place election CSV files in `/Project2/testing/`.  
-2. Run information can be found in readme for project 2 
+1. Run information can be found in readme for project 2.
+2. Select CSV input files in `Project2/testing` for each voting system.
 3. Review the output for results.
 
 ### Testing
