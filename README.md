@@ -1,6 +1,6 @@
 # Voting Stsysem
 
-## Team 4 – Team Members
+## Team 2 – Team Members
 - Ly Xiong
 - Kongmeng Thao  
 - Elsdon Chang
