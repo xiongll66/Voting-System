@@ -1,6 +1,6 @@
 # CSci 5801 – Software Engineering I, Spring 2025  
 
-## Team #X – Team Members
+## Team 4 – Team Members
 - Ly Xiong
 - Kongmeng Thao  
 - Elsdon Chang
