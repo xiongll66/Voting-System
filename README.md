@@ -16,38 +16,6 @@ This repository contains deliverables for **Project 1 – Waterfall Methodology*
 
 ---
 
-## Repository Structure
-repo-TeamXX/
-│
-├── Project1-Waterfall/
-│ ├── SDD/ # Software Design Documents and diagrams
-│ │ ├── SDD_TeamXX.pdf
-│ │ ├── UML_ClassDiagram.pdf
-│ │ ├── UML_SequenceDiagram_STV.pdf
-│ │ └── UML_ActivityDiagram_PV.pdf
-│ └── README.md
-│
-├── Project2/
-│ ├── src/ # Source code for Voting System (Agile version)
-│ │ ├── STV.java / STV.cpp
-│ │ ├── PV.java / PV.cpp
-│ │ ├── MV.java / MV.cpp
-│ │ └── main.java / main.cpp
-│ ├── testing/ # Test files and CSV inputs
-│ │ ├── testinglogs.pdf
-│ │ ├── STV_test.csv
-│ │ ├── PV_test.csv
-│ │ └── MV_test.csv
-│ ├── documentation/ # Generated documentation (javadocs/doxygen)
-│ ├── product_backlogs/ # Initial Product Backlog Items (PBIs)
-│ │ └── InitialProductBacklog.pdf
-│ └── sprint_backlogs/ # Sprint Backlogs during Agile Sprint
-│ └── Initial_Sprint_Backlog.xlsx
-└── README.md # This file
-
-
----
-
 ## Project 1 – Waterfall Methodology
 
 ### Overview
@@ -64,7 +32,7 @@ The Voting System supports:
 
 ### Instructions to Run
 1. Place the CSV input files in `Project1-Waterfall/SDD` or the project’s input folder.  
-2. Run the main program for STV or PV.  
+2. Run information can be found in readme for project 1. 
 3. Verify results against specifications in the SDD.
 
 ---
@@ -90,7 +58,7 @@ Enhancements include:
 
 ### Running the Voting System
 1. Place election CSV files in `/Project2/testing/`.  
-2. Run `main.java` / `main.cpp` to execute STV, PV, or MV elections.  
+2. Run information can be found in readme for project 2 
 3. Review the output for results.
 
 ### Testing
