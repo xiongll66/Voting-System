@@ -1,4 +1,4 @@
-# CSci 5801 – Software Engineering I, Spring 2025  
+# Voting Stsysem
 
 ## Team 4 – Team Members
 - Ly Xiong
